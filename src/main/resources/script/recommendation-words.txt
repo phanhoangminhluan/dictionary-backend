@@ -1,0 +1,18 @@
+DELETE recommendation-words
+
+PUT recommendation-words
+{
+  "mappings": {
+    "properties": {
+      "word": {
+        "type": "keyword"
+      },
+      "word_text": {
+        "type": "text"
+      },
+      "word_search": {
+        "type": "search_as_you_type"
+      }
+    }
+  }
+}

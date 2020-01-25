@@ -1,0 +1,57 @@
+DELETE word-detail
+
+PUT word-detail
+{
+  "mappings": {
+    "properties": {
+      "word": {
+        "type": "keyword"
+      },
+      "definition-detail": {
+        "type": "nested",
+        "properties": {
+          "definition": {
+            "type": "text"
+          },
+          "part-of-speech": {
+            "type": "keyword"
+          },
+          "has-types": {
+            "type": "keyword"
+          },
+          "derivations": {
+            "type": "keyword"
+          },
+          "examples": {
+            "type": "text"
+          },
+          "verbGroup": {
+            "type": "keyword"
+          }
+        }
+      },
+      "syllables": {
+        "type": "nested",
+        "properties": {
+          "count": {
+              "type": "integer"
+            },
+            "list": {
+              "type": "text"
+            }
+        }
+      },
+      "pronunciation": {
+        "type": "nested",
+        "properties": {
+          "all": {
+            "type": "keyword"
+          }
+        }
+      },
+      "frequency": {
+        "type": "integer"
+      }
+    }
+  }
+}
