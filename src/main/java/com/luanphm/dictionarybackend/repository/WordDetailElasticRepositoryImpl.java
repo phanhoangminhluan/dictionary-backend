@@ -49,6 +49,10 @@ public class WordDetailElasticRepositoryImpl extends ElasticSearchHandler<WordDe
         return deleteById(id);
     }
 
+    @Override
+    public boolean createWord(WordDetail wordDetail) {
+        return create(wordDetail);
+    }
 
     @Override
     public Class<WordDetail> getIndexClass() {

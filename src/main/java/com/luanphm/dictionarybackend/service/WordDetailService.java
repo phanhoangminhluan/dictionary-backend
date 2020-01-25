@@ -14,4 +14,6 @@ public interface WordDetailService {
     boolean update(WordDetailDTO wordDetail) throws JsonProcessingException;
 
     boolean delete(String id);
+
+    boolean create(WordDetailDTO wordDetailDTO);
 }

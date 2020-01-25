@@ -43,4 +43,9 @@ public class WordDetailRapidApiRepositoryImpl implements WordDetailRepository {
         return false;
     }
 
+    @Override
+    public boolean createWord(WordDetail wordDetail) {
+        return false;
+    }
+
 }

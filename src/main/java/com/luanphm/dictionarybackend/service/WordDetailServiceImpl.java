@@ -82,4 +82,11 @@ public class WordDetailServiceImpl implements WordDetailService {
     public boolean delete(String id) {
        return wordDetailElasticRepository.deleteWord(id);
     }
+
+    @Override
+    public boolean create(WordDetailDTO wordDetailDTO) {
+        WordDetail wordDetail = new WordDetail(wordDetailDTO);
+        wordDetail.setId(wordDetail.getWord());
+        return wordDetailElasticRepository.createWord(wordDetail);
+    }
 }

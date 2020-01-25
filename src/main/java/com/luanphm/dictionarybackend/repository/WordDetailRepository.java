@@ -17,4 +17,6 @@ public interface WordDetailRepository {
 
     boolean deleteWord(String id);
 
+    boolean createWord(WordDetail wordDetail);
+
 }

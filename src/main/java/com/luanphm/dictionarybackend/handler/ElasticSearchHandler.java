@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.luanphm.dictionarybackend.constant.DFConstant;
 import com.luanphm.dictionarybackend.constant.ElasticTerms;
 import com.luanphm.dictionarybackend.entity.IdObject;
+import com.luanphm.dictionarybackend.entity.WordDetail;
 import com.luanphm.dictionarybackend.utility.ElasticUtilities;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -70,7 +71,7 @@ public abstract class ElasticSearchHandler<T extends IdObject> {
     public boolean update(T document) throws JsonProcessingException {
         boolean isExist = getById(document.getId()) != null;
         if (isExist) {
-            String str = save(document);
+            save(document);
             return true;
         }
         return false;
@@ -96,6 +97,14 @@ public abstract class ElasticSearchHandler<T extends IdObject> {
         return isExist;
     }
 
+    public boolean create(T document) {
+        boolean isExist = getById(document.getId()) != null;
+        if (!isExist) {
+            save(document);
+            return true;
+        }
+        return false;
+    }
     public abstract Class<T> getIndexClass();
     public abstract String getIndexName();
 }

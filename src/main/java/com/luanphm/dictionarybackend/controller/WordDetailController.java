@@ -36,6 +36,15 @@ public class WordDetailController {
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_NOT_FOUND, ResponseDTO.EMPTY_BODY);
     }
 
+    @PostMapping(value = "word")
+    public ResponseDTO createWord(@RequestBody WordDetailDTO wordDetailDTO) {
+        boolean isSuccess = wordDetailService.create(wordDetailDTO);
+
+        return isSuccess
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY)
+                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_IS_EXISTED,  ResponseDTO.EMPTY_BODY);
+    }
+
     @PutMapping(value = "word")
     public ResponseDTO updateWord(@RequestBody WordDetailDTO wordDetailDTO) throws JsonProcessingException {
         boolean isSuccess = wordDetailService.update(wordDetailDTO);
