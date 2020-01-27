@@ -1,10 +1,9 @@
 package com.luanphm.dictionarybackend.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.luanphm.dictionarybackend.constant.DFConstant;
-import com.luanphm.dictionarybackend.constant.ElasticTerms;
+import com.luanphm.dictionarybackend.constant.CommonConstants;
+import com.luanphm.dictionarybackend.constant.ElasticFields;
 import com.luanphm.dictionarybackend.entity.IdObject;
-import com.luanphm.dictionarybackend.entity.WordDetail;
 import com.luanphm.dictionarybackend.utility.ElasticUtilities;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -89,9 +88,9 @@ public abstract class ElasticSearchHandler<T extends IdObject> {
         boolean isExist = getById(id) != null;
         if (isExist) {
             DeleteQuery deleteQuery = new DeleteQuery();
-            deleteQuery.setQuery(QueryBuilders.termQuery(ElasticTerms._ID, id));
+            deleteQuery.setQuery(QueryBuilders.termQuery(ElasticFields._ID, id));
             deleteQuery.setIndex(getIndexName());
-            deleteQuery.setType(DFConstant._DOC);
+            deleteQuery.setType(CommonConstants._DOC);
             elasticsearchOperations.delete(deleteQuery);
         }
         return isExist;

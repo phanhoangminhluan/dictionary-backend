@@ -1,12 +1,9 @@
 package com.luanphm.dictionarybackend.dto;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.luanphm.dictionarybackend.entity.WordDetail;
 import com.luanphm.dictionarybackend.entity.word_entity.DefinitionDetail;
-import com.luanphm.dictionarybackend.entity.word_entity.Pronunciation;
-import com.luanphm.dictionarybackend.entity.word_entity.Syllables;
+import com.luanphm.dictionarybackend.handler.MappingHandler;
 import lombok.*;
+import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,31 +14,18 @@ import java.util.List;
 public class WordDetailDTO {
 
     private String word;
+    private List<DefinitionDetailDTO> definitionDetails;
+    private List<String> syllableList;
     private String pronunciation;
     private int frequency;
-    private List<String> syllableList;
-    private List<DefinitionDetailDTO> definitionDetails;
 
     public static class WordDetailDTOBuilder {
 
         private List<DefinitionDetailDTO> definitionDetails = new ArrayList<>();
-
+        private MappingHandler mappingHandler = Mappers.getMapper(MappingHandler.class);
         public WordDetailDTOBuilder definitionDetails(List<DefinitionDetail> definitionDetail) {
             definitionDetail.forEach( detail -> {
-                this.definitionDetails.add(
-                        DefinitionDetailDTO.builder()
-                                .definition(detail.getDefinition())
-                                .examples(detail.getExamples())
-                                .derivations(detail.getDerivations())
-                                .hasTypes(detail.getHasTypes())
-                                .partOf(detail.getPartOf())
-                                .partOfSpeech(detail.getPartOfSpeech())
-                                .synonyms(detail.getSynonyms())
-                                .typeOf(detail.getTypeOf())
-                                .verbGroup(detail.getVerbGroup())
-                                .build()
-                );
-
+                this.definitionDetails.add(mappingHandler.definitionDetailToDto(detail));
             });
             return this;
         }

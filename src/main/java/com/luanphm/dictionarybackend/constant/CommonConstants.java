@@ -1,6 +1,6 @@
 package com.luanphm.dictionarybackend.constant;
 
-public class DFConstant {
+public class CommonConstants {
     public static final String WORD_API_URL = "https://wordsapiv1.p.rapidapi.com/words/";
     public static final String RAPID_API_HOST_KEY = "x-rapidapi-host";
     public static final String RAPID_API_HOST_VALUE = "wordsapiv1.p.rapidapi.com";

@@ -1,13 +1,16 @@
 package com.luanphm.dictionarybackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.luanphm.dictionarybackend.constant.ElasticFields;
 import com.luanphm.dictionarybackend.dto.WordDetailDTO;
 import com.luanphm.dictionarybackend.entity.word_entity.DefinitionDetail;
 import com.luanphm.dictionarybackend.entity.word_entity.Pronunciation;
 import com.luanphm.dictionarybackend.entity.word_entity.Syllables;
+import com.luanphm.dictionarybackend.handler.MappingHandler;
 import lombok.*;
-import org.springframework.data.annotation.Id;
+import org.mapstruct.factory.Mappers;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +24,14 @@ import java.util.List;
 public class WordDetail extends IdObject {
     private String word;
     @JsonAlias("results")
+    @Field(ElasticFields.DEFINITION_DETAIL)
     private List<DefinitionDetail> definitionDetails = new ArrayList<>();
     private Syllables syllables;
     private Pronunciation pronunciation;
     private int frequency;
 
     public WordDetail(WordDetailDTO dto) {
+        MappingHandler mappingHandler = Mappers.getMapper(MappingHandler.class);
         this.word = dto.getWord();
         this.syllables = Syllables.builder()
                     .count(dto.getSyllableList().size())
@@ -36,17 +41,7 @@ public class WordDetail extends IdObject {
                     .all(dto.getPronunciation())
                 .build();
         dto.getDefinitionDetails().forEach(detail -> {
-            this.definitionDetails.add(DefinitionDetail.builder()
-                        .definition(detail.getDefinition())
-                        .derivations(detail.getDerivations())
-                        .examples(detail.getExamples())
-                        .hasTypes(detail.getHasTypes())
-                        .partOf(detail.getPartOf())
-                        .partOfSpeech(detail.getPartOfSpeech())
-                        .synonyms(detail.getSynonyms())
-                        .typeOf(detail.getTypeOf())
-                        .verbGroup(detail.getVerbGroup())
-                    .build());
+            this.definitionDetails.add(mappingHandler.dtoToDefinitionDetail(detail));
         });
     }
 }

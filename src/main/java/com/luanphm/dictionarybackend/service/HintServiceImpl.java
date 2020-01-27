@@ -1,7 +1,7 @@
 package com.luanphm.dictionarybackend.service;
 
 import com.luanphm.dictionarybackend.entity.Hint;
-import com.luanphm.dictionarybackend.repository.HintRepository;
+import com.luanphm.dictionarybackend.repository.hint.HintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

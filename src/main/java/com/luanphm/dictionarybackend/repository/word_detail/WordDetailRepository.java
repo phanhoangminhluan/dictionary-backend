@@ -1,4 +1,4 @@
-package com.luanphm.dictionarybackend.repository;
+package com.luanphm.dictionarybackend.repository.word_detail;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.luanphm.dictionarybackend.entity.WordDetail;

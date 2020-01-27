@@ -3,7 +3,7 @@ package com.luanphm.dictionarybackend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.luanphm.dictionarybackend.dto.WordDetailDTO;
 import com.luanphm.dictionarybackend.entity.WordDetail;
-import com.luanphm.dictionarybackend.repository.WordDetailRepository;
+import com.luanphm.dictionarybackend.repository.word_detail.WordDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

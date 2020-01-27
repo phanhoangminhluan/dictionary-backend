@@ -1,4 +1,4 @@
-package com.luanphm.dictionarybackend.repository;
+package com.luanphm.dictionarybackend.repository.word_detail;
 
 import com.luanphm.dictionarybackend.entity.WordDetail;
 import com.luanphm.dictionarybackend.handler.RapidApiRequestHandler;

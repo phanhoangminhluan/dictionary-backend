@@ -1,4 +1,4 @@
-package com.luanphm.dictionarybackend.repository;
+package com.luanphm.dictionarybackend.repository.hint;
 
 import com.luanphm.dictionarybackend.constant.ElasticIndexes;
 import com.luanphm.dictionarybackend.entity.Hint;

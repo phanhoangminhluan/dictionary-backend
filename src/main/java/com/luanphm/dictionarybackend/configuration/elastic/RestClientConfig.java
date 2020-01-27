@@ -1,4 +1,4 @@
-package com.luanphm.dictionarybackend.configuration;
+package com.luanphm.dictionarybackend.configuration.elastic;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Configuration;
