@@ -22,7 +22,7 @@ public class UserWithRoleDTO {
 
     public UserWithRoleDTO(User user) {
         if (user != null) {
-            this.username = user.getUsername();
+            this.username = user.getId();
             this.password = user.getPassword();
             this.email = user.getEmail();
             this.roleDTO = new RoleDTO(user.getRole());

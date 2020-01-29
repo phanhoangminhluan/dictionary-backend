@@ -6,14 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "main_user")
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
-    @Id
-    @Column(name = "username")
-    private String username;
+public class User extends IdObject<String> {
 
     @Column(name = "email")
     private String email;
@@ -25,12 +21,18 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public User (String username, String email, String password, Role role) {
-        this.username = username;
+   public User(String id, String email, String password, Role role) {
+       this.id = id;
+       this.email = email;
+       this.password = password;
+       this.role = role;
+   }
+
+    public User(String id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
     }
-
 
 }

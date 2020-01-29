@@ -1,14 +1,20 @@
 package com.luanphm.dictionarybackend.entity;
 
 
-import lombok.*;
-import org.springframework.data.annotation.Id;
+import lombok.Setter;
 
-@Getter
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
+
+@MappedSuperclass
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class IdObject {
+public abstract class IdObject<ID extends Serializable> {
+
     @Id
-    private String id;
+    protected ID id;
+
+    public ID getId() {
+        return id;
+    }
 }

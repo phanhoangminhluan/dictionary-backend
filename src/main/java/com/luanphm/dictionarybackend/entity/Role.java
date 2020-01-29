@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
 @Builder
@@ -12,10 +11,7 @@ import javax.persistence.Id;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
-
-    @Id
-    private int id;
+public class Role extends IdObject<Integer> {
 
     @Column(name = "role_name")
     private String roleName;
@@ -25,3 +21,5 @@ public class Role {
         this.id = roleId;
     }
 }
+
+

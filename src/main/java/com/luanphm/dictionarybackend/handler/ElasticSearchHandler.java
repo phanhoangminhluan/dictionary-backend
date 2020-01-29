@@ -25,7 +25,7 @@ public abstract class ElasticSearchHandler<T extends IdObject> {
     protected ElasticsearchOperations elasticsearchOperations;
 
     public String save(T document) {
-        IndexQuery indexQuery = ElasticUtilities.prepareIndexQuery(document.getId(), document);
+        IndexQuery indexQuery = ElasticUtilities.prepareIndexQuery((String) document.getId(), document);
         return elasticsearchOperations.index(indexQuery);
     }
 
@@ -33,7 +33,7 @@ public abstract class ElasticSearchHandler<T extends IdObject> {
     public void saveMany(List<T> documents) {
         List<IndexQuery> indexQueries = new ArrayList<>();
         for (T document : documents) {
-            IndexQuery indexQuery = ElasticUtilities.prepareIndexQuery(document.getId(), document);
+            IndexQuery indexQuery = ElasticUtilities.prepareIndexQuery((String) document.getId(), document);
         }
         elasticsearchOperations.bulkIndex(indexQueries);
     }
@@ -68,7 +68,7 @@ public abstract class ElasticSearchHandler<T extends IdObject> {
     }
 
     public boolean update(T document) throws JsonProcessingException {
-        boolean isExist = getById(document.getId()) != null;
+        boolean isExist = getById((String) document.getId()) != null;
         if (isExist) {
             save(document);
             return true;
@@ -97,7 +97,7 @@ public abstract class ElasticSearchHandler<T extends IdObject> {
     }
 
     public boolean create(T document) {
-        boolean isExist = getById(document.getId()) != null;
+        boolean isExist = getById((String) document.getId()) != null;
         if (!isExist) {
             save(document);
             return true;

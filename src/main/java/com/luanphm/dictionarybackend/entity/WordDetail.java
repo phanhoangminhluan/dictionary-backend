@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WordDetail extends IdObject {
+public class WordDetail extends IdObject<String> {
     private String word;
     @JsonAlias("results")
     @Field(ElasticFields.DEFINITION_DETAIL)
