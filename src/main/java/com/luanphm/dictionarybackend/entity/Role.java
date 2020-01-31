@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role extends IdObject<Integer> {
+public class Role extends BaseEntity<Integer> {
 
     @Column(name = "role_name")
     private String roleName;

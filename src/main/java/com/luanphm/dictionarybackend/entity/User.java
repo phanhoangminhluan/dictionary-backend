@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User extends IdObject<String> {
+public class User extends BaseEntity<String> {
 
     @Column(name = "email")
     private String email;

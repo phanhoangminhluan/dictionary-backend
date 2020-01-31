@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Hint extends IdObject<String> {
+public class Hint extends BaseEntity<String> {
     private String word;
 
     @Field("word_texts")

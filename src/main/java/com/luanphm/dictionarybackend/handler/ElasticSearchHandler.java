@@ -3,7 +3,7 @@ package com.luanphm.dictionarybackend.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.luanphm.dictionarybackend.constant.CommonConstants;
 import com.luanphm.dictionarybackend.constant.ElasticFields;
-import com.luanphm.dictionarybackend.entity.IdObject;
+import com.luanphm.dictionarybackend.entity.BaseEntity;
 import com.luanphm.dictionarybackend.utility.ElasticUtilities;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @Component
-public abstract class ElasticSearchHandler<T extends IdObject> {
+public abstract class ElasticSearchHandler<T extends BaseEntity> {
     @Autowired
     protected ElasticsearchOperations elasticsearchOperations;
 
