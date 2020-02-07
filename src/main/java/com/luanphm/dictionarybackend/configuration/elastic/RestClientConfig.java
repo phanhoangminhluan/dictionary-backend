@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.core.EntityMapper;
 public class RestClientConfig extends AbstractElasticsearchConfiguration {
     @Override
     public RestHighLevelClient elasticsearchClient() {
-        return RestClients.create(ClientConfiguration.create("localhost:9200")).rest();
+        return RestClients.create(ClientConfiguration.create("113.23.69.141:9200")).rest();
     }
 
     @Override
