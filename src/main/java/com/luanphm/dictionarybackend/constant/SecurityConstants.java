@@ -12,7 +12,8 @@ public class SecurityConstants {
             "/webjars/springfox-swagger-ui/**",
             "/v2/api-docs",
             "/",
-            "/csrf"
+            "/csrf",
+            "/word/*"
     };
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String ROLE_USER = "USER";
