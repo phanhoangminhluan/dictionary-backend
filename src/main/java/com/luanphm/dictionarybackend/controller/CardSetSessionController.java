@@ -4,11 +4,9 @@ import com.luanphm.dictionarybackend.controller.SharedController.MyAbstractContr
 import com.luanphm.dictionarybackend.dto.CardSetSessionDTO;
 import com.luanphm.dictionarybackend.service.CardSetSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-@RequestMapping(value = "card-set-session")
+//@Controller
+//@RequestMapping(value = "card-set-session")
 public class CardSetSessionController extends MyAbstractController<String, CardSetSessionDTO> {
 
     @Autowired
