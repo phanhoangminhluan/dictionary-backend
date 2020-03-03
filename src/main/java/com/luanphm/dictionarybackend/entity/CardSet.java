@@ -1,8 +1,12 @@
 package com.luanphm.dictionarybackend.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "card_set")
@@ -21,10 +25,15 @@ public class CardSet extends BaseEntity<String> {
     private String createdDate;
 
     @Builder
-    public CardSet(String id, String name, User user, String createdDate) {
+    public CardSet(String id, String name, User user, String createdDate, List<Card> cards) {
         super(id);
         this.name = name;
         this.user = user;
         this.createdDate = createdDate;
+        this.cards = cards;
     }
+
+    @OneToMany(mappedBy = "cardSet", cascade = CascadeType.ALL)
+    private List<Card> cards;
+
 }

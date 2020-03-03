@@ -15,7 +15,6 @@ public abstract class StudiableCardIdMapping extends MappingHelper implements Ba
     @Override
     @Mappings({
             @Mapping(source = "dto.cardId", target = "card"),
-            @Mapping(source = "dto.cardSetId", target = "cardSet"),
             @Mapping(source = "dto.cardSetSessionId", target = "cardSetSession")
     })
     public abstract StudiableCardId toEntity(StudiableCardIdDTO dto);
@@ -23,7 +22,6 @@ public abstract class StudiableCardIdMapping extends MappingHelper implements Ba
     @Override
     @Mappings({
             @Mapping(source = "entity.card", target = "cardId"),
-            @Mapping(source = "entity.cardSet", target = "cardSetId"),
             @Mapping(source = "entity.cardSetSession", target = "cardSetSessionId")
     })
     public abstract  StudiableCardIdDTO toDto(StudiableCardId entity);

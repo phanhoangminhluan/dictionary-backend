@@ -1,6 +1,7 @@
 package com.luanphm.dictionarybackend.mapping;
 
 import com.luanphm.dictionarybackend.dto.CardDTO;
+import com.luanphm.dictionarybackend.dto.CardInsertDTO;
 import com.luanphm.dictionarybackend.entity.Card;
 import com.luanphm.dictionarybackend.mapping.common.BaseMapping;
 import com.luanphm.dictionarybackend.mapping.common.MappingHelper;
@@ -30,4 +31,7 @@ public abstract class CardMapping extends MappingHelper implements BaseMapping<C
 
     @Override
     public abstract List<CardDTO> toDtos(List<Card> entites);
+
+    public abstract List<Card> toCardsFromCardInsertDto(List<CardInsertDTO> dtos);
+
 }

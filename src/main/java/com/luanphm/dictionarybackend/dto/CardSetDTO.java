@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,5 +20,9 @@ public class CardSetDTO {
     private String username;
 
     private String createdDate;
+
+    private List<CardDTO> cards;
+
+
 
 }

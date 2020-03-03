@@ -30,4 +30,18 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
         StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
         super.deleteById(studiableCardId);
     }
+
+    @Override
+    public void increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO) {
+        StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
+        StudiableCard studiableCard = studiableCardRepository.getById(studiableCardId);
+        studiableCardRepository.increaseRememberCount(studiableCard);
+    }
+
+    @Override
+    public void increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO) {
+        StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
+        StudiableCard studiableCard = studiableCardRepository.getById(studiableCardId);
+        studiableCardRepository.increaseForgetCount(studiableCard);
+    }
 }

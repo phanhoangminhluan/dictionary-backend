@@ -8,4 +8,9 @@ import com.luanphm.dictionarybackend.service.SharedService.MyInterfaceService;
 public interface StudiableCardService extends MyInterfaceService<StudiableCardId, StudiableCardDTO> {
 
     void deleteById(StudiableCardIdDTO studiableCardIdDTO);
+
+    void increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO);
+
+    void increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO);
+
 }

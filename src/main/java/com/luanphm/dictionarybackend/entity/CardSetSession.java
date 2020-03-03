@@ -1,8 +1,12 @@
 package com.luanphm.dictionarybackend.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "card_set_session")
@@ -22,12 +26,18 @@ public class CardSetSession extends BaseEntity<String> {
     @JoinColumn(name = "card_set_id")
     private CardSet cardSet;
 
-    @Builder
+    @OneToMany
+    @JoinColumns({
+            @JoinColumn(name = "card_set_session_id")
+    })
+    private List<StudiableCard> studiableCards;
 
-    public CardSetSession(String id, String createdDate, boolean isOpen, CardSet cardSet) {
+    @Builder
+    public CardSetSession(String id, String createdDate, boolean isOpen, CardSet cardSet, List<StudiableCard> studiableCards) {
         super(id);
         this.createdDate = createdDate;
         this.isOpen = isOpen;
         this.cardSet = cardSet;
+        this.studiableCards = studiableCards;
     }
 }

@@ -13,8 +13,6 @@ public class StudiableCardIdDTO {
 
     private String cardId;
 
-    private String cardSetId;
-
     private String cardSetSessionId;
 
 
