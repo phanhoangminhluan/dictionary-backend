@@ -30,7 +30,7 @@ public class HintController {
     public ResponseEntity getHints(@PathVariable String word) {
         List<String> hints = hintService.getHints(word);
         return hints.size() != 0
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, hints, HttpStatus.OK)
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, hints, HttpStatus.OK)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_NOT_FOUND, ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
     }
 

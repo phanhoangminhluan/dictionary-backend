@@ -23,7 +23,7 @@ public abstract class MyAbstractController<ID, D> {
         if (dtos == null || dtos.size() == 0) {
             return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.NOT_FOUND, ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
         } else {
-            return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, dtos, HttpStatus.OK);
+            return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, dtos, HttpStatus.OK);
 
         }
     }
@@ -34,7 +34,7 @@ public abstract class MyAbstractController<ID, D> {
         if (dto == null) {
             return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.NOT_FOUND, ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
         } else {
-            return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, dto, HttpStatus.OK);
+            return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, dto, HttpStatus.OK);
         }
     }
 
@@ -42,7 +42,7 @@ public abstract class MyAbstractController<ID, D> {
     public ResponseEntity add(@Valid @RequestBody D dto) {
         boolean isAdded = service.add(dto);
         if (!isAdded) {
-            return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_FAIL, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+            return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
         } else {
             return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.ADDED, dto, HttpStatus.CREATED);
         }
@@ -53,7 +53,7 @@ public abstract class MyAbstractController<ID, D> {
         boolean isUpdated = service.update(dto);
 
         if (!isUpdated) {
-            return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_FAIL, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+            return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
         } else {
             return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.UPDATED, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED);
         }

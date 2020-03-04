@@ -1,8 +1,8 @@
 package com.luanphm.dictionarybackend.mapping;
 
 
-import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
-import com.luanphm.dictionarybackend.dto.StudiableCardIdDTO;
+import com.luanphm.dictionarybackend.dto.*;
+import com.luanphm.dictionarybackend.entity.Card;
 import com.luanphm.dictionarybackend.entity.StudiableCard;
 import com.luanphm.dictionarybackend.entity.StudiableCardId;
 import com.luanphm.dictionarybackend.mapping.common.BaseMapping;
@@ -21,6 +21,7 @@ public abstract class StudiableCardMapping extends MappingHelper implements Base
     public abstract StudiableCard toEntity(StudiableCardDTO dto);
 
     @Override
+    @Mapping(source = "remember", target = "remember")
     public abstract StudiableCardDTO toDto(StudiableCard entity);
 
     @Mappings({
@@ -28,6 +29,15 @@ public abstract class StudiableCardMapping extends MappingHelper implements Base
             @Mapping(source = "dto.cardSetSessionId", target = "cardSetSession")
     })
     public abstract StudiableCardId toEntity(StudiableCardIdDTO dto);
+
+    @Mapping(source = "remember", target = "remember")
+    public abstract StudiableCardLearnDTO toLearnDto(StudiableCard entity);
+
+    @Mappings({
+            @Mapping(source = "dto.cardSetSession", target = "cardSetSessionId"),
+            @Mapping(source = "card", target = "cardDto")
+    })
+    public abstract StudiableCardIdLearnDTO toLearnIdDto( StudiableCardId dto);
 
     @Mappings({
             @Mapping(source = "entity.card", target = "cardId"),
@@ -40,4 +50,14 @@ public abstract class StudiableCardMapping extends MappingHelper implements Base
 
     @Override
     public abstract List<StudiableCardDTO> toDtos(List<StudiableCard> entites);
+
+    @Mappings({
+            @Mapping(target = "cardSet", source = "cardSetId")
+    })
+    public abstract Card toCardEntity(CardDTO dto);
+
+    @Mappings({
+            @Mapping(target = "cardSetId", source = "cardSet")
+    })
+    public abstract CardDTO toCardDto(Card entity);
 }

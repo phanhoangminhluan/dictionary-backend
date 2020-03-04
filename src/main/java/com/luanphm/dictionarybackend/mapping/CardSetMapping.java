@@ -20,13 +20,15 @@ public abstract class CardSetMapping extends MappingHelper implements BaseMappin
     @Override
     @Mappings({
             @Mapping(source = "dto.username", target = "user"),
-            @Mapping(source = "cards", target = "cards")
+            @Mapping(source = "cards", target = "cards"),
+            @Mapping(source = "cardSetSessionId", target = "cardSetSession")
     })
     public abstract CardSet toEntity(CardSetDTO dto);
 
     @Override
     @Mappings({
-            @Mapping(source = "entity.user", target = "username")
+            @Mapping(source = "entity.user", target = "username"),
+            @Mapping(source = "cardSetSession", target = "cardSetSessionId")
     })
     public abstract CardSetDTO toDto(CardSet entity);
 
@@ -43,6 +45,10 @@ public abstract class CardSetMapping extends MappingHelper implements BaseMappin
 
     public abstract List<CardDTO> toCardDtos(List<Card> entities);
 
+    @Mappings({
+            @Mapping(target = "cardSetId", source = "cardSet")
+    })
+    public abstract CardDTO toCardDto(Card entity);
 
     public abstract Card toCard(CardInsertDTO dto);
 

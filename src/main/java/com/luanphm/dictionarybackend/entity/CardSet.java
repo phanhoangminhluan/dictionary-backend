@@ -25,15 +25,19 @@ public class CardSet extends BaseEntity<String> {
     private String createdDate;
 
     @Builder
-    public CardSet(String id, String name, User user, String createdDate, List<Card> cards) {
+    public CardSet(String id, String name, User user, String createdDate, List<Card> cards, List<CardSetSession> cardSetSession) {
         super(id);
         this.name = name;
         this.user = user;
         this.createdDate = createdDate;
         this.cards = cards;
+        this.cardSetSession = cardSetSession;
     }
 
     @OneToMany(mappedBy = "cardSet", cascade = CascadeType.ALL)
     private List<Card> cards;
+
+    @OneToMany(mappedBy = "cardSet", cascade = CascadeType.ALL)
+    private List<CardSetSession> cardSetSession;
 
 }

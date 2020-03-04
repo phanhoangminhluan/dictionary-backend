@@ -2,7 +2,10 @@ package com.luanphm.dictionarybackend.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Getter
@@ -15,23 +18,15 @@ public class Card extends BaseEntity<String> {
 
     private String definition;
 
-    @Column(name = "remember_count")
-    private int rememberCount;
-
-    @Column(name = "forget_count")
-    private int forgetCount;
-
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "card_set_id")
     private CardSet cardSet;
 
     @Builder
-    public Card(String id, String term, String definition, int rememberCount, int forgetCount, CardSet cardSet) {
+    public Card(String id, String term, String definition, CardSet cardSet) {
         super(id);
         this.term = term;
         this.definition = definition;
-        this.rememberCount = rememberCount;
-        this.forgetCount = forgetCount;
         this.cardSet = cardSet;
     }
 }

@@ -36,7 +36,6 @@ public class CardSetSessionCustomRepositoryImpl extends MyAbstractSession implem
         }
         return cardSetSession;
     }
-
     private List<StudiableCard> generateStudiableCard(CardSetSession cardSetSession, Session session) {
         List<Card> cards = cardSetSession.getCardSet().getCards();
         List<StudiableCard> studiableCards = new ArrayList<>();
@@ -45,7 +44,7 @@ public class CardSetSessionCustomRepositoryImpl extends MyAbstractSession implem
             StudiableCard studiableCard = StudiableCard
                     .builder()
                     .id(StudiableCardId.builder().card(card).cardSetSession(cardSetSession).build())
-                    .isRemember(false)
+                    .remember(false)
                     .rememberCount(0)
                     .forgetCount(0)
                     .build();

@@ -1,19 +1,22 @@
 package com.luanphm.dictionarybackend.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class StudiableCardDTO {
+public class StudiableCardLearnDTO {
 
-    private StudiableCardIdDTO id;
+    private StudiableCardIdLearnDTO id;
 
     private boolean remember;
 
     private int rememberCount;
 
     private int forgetCount;
+
 }

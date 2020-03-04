@@ -23,7 +23,16 @@ public class StudiableCard implements Serializable {
     })
     private StudiableCardId id;
 
-    private boolean isRemember;
+    @Column(name = "is_remember")
+    private boolean remember;
+
+    public boolean isRemember() {
+        return remember;
+    }
+
+    public void setRemember(boolean remember) {
+        this.remember = remember;
+    }
 
     @Column(name = "remember_count")
     private int rememberCount;
@@ -33,11 +42,13 @@ public class StudiableCard implements Serializable {
 
     public int increaseRememberCount() {
         rememberCount++;
+        remember = true;
         return rememberCount;
     }
 
     public int increaseForgetCount() {
         forgetCount++;
+        remember = false;
         return forgetCount;
     }
 }

@@ -2,9 +2,11 @@ package com.luanphm.dictionarybackend.service;
 
 import com.luanphm.dictionarybackend.dto.CardDTO;
 import com.luanphm.dictionarybackend.dto.CardInsertManyDTO;
+import com.luanphm.dictionarybackend.dto.CardSetDTO;
 import com.luanphm.dictionarybackend.entity.Card;
 import com.luanphm.dictionarybackend.entity.CardSet;
 import com.luanphm.dictionarybackend.mapping.CardMapping;
+import com.luanphm.dictionarybackend.mapping.CardSetMapping;
 import com.luanphm.dictionarybackend.repository.card.CardRepository;
 import com.luanphm.dictionarybackend.repository.card_set.CardSetRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
@@ -27,6 +29,8 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
 
     private CardMapping cardMapping = Mappers.getMapper(CardMapping.class);
 
+    private CardSetMapping cardSetMapping = Mappers.getMapper(CardSetMapping.class);
+
     @Override
     protected void inject() {
         this.repository = cardRepository;
@@ -36,17 +40,22 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
 
     @Override
     @Transactional
-    public boolean addMany(CardInsertManyDTO dto) {
+    public CardSetDTO addMany(CardInsertManyDTO dto) {
 
         CardSet cardSet = cardSetRepository.getById(dto.getCardSetId());
+
+        if (cardSet == null) return null;
 
         List<Card> cards = cardMapping.toCardsFromCardInsertDto(dto.getCards());
 
         for (Card card : cards) {
             card.setId(CommonUtilities.generateUniqueId());
             card.setCardSet(cardSet);
+            cardSet.getCards().add(card);
         }
 
-        return cardRepository.addMany(cards);
+        CardSetDTO cardSetDTO = cardSetMapping.toDto(cardSet);
+
+        return cardSetDTO;
     }
 }

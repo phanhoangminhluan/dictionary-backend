@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -25,7 +23,7 @@ public class WordDetailController {
         WordDetailDTO wordDetailDTO = wordDetailService.getWord(word);
 
         return wordDetailDTO != null
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, wordDetailDTO, HttpStatus.OK)
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, wordDetailDTO, HttpStatus.OK)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_NOT_FOUND, ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
     }
 
@@ -34,7 +32,7 @@ public class WordDetailController {
         List<WordDetailDTO> dtos =  wordDetailService.getByTerm(term, value);
 
         return dtos != null
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, dtos, HttpStatus.OK)
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, dtos, HttpStatus.OK)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_NOT_FOUND, ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
     }
 
@@ -43,7 +41,7 @@ public class WordDetailController {
         boolean isSuccess = wordDetailService.create(wordDetailDTO);
 
         return isSuccess
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CREATED)
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CREATED)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_IS_EXISTED,  ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
@@ -52,7 +50,7 @@ public class WordDetailController {
         boolean isSuccess = wordDetailService.update(wordDetailDTO);
 
         return isSuccess
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED)
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_NOT_FOUND,  ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
     }
 
@@ -61,7 +59,7 @@ public class WordDetailController {
         boolean isSuccess = wordDetailService.delete(word);
 
         return isSuccess
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.OK)
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.OK)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_NOT_FOUND,  ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
     }
 }

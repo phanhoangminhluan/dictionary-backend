@@ -4,6 +4,6 @@ import com.luanphm.dictionarybackend.entity.StudiableCard;
 
 public interface StudiableCardCustomRepository{
 
-    void increaseRememberCount(StudiableCard studiableCard);
-    void increaseForgetCount(StudiableCard studiableCard);
+    StudiableCard increaseRememberCount(StudiableCard studiableCard);
+    StudiableCard increaseForgetCount(StudiableCard studiableCard);
 }

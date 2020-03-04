@@ -11,21 +11,22 @@ import javax.transaction.Transactional;
 public class StudiableCardCustomRepositoryImpl extends MyAbstractSession implements StudiableCardCustomRepository {
        @Override
        @Transactional
-    public void increaseRememberCount(StudiableCard studiableCard) {
+    public StudiableCard increaseRememberCount(StudiableCard studiableCard) {
         Session session = getSession();
         studiableCard.setRemember(true);
         studiableCard.increaseRememberCount();
         session.update(studiableCard);
-
+        return studiableCard;
     }
 
     @Override
     @Transactional
-    public void increaseForgetCount(StudiableCard studiableCard) {
+    public StudiableCard increaseForgetCount(StudiableCard studiableCard) {
         Session session = getSession();
         studiableCard.setRemember(false);
         studiableCard.increaseForgetCount();
         session.save(studiableCard);
+        return studiableCard;
     }
 
 }

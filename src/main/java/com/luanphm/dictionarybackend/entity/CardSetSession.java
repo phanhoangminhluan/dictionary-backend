@@ -22,11 +22,11 @@ public class CardSetSession extends BaseEntity<String> {
     @Column(name = "is_open")
     private boolean isOpen;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "card_set_id")
     private CardSet cardSet;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumns({
             @JoinColumn(name = "card_set_session_id")
     })

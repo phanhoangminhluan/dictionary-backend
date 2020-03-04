@@ -5,24 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CardSetDTO {
+@NoArgsConstructor
+public class StudiableCardIdLearnDTO {
 
-    private String id;
-
-    private String name;
-
-    private String username;
-
-    private String createdDate;
+    private CardDTO cardDto;
 
     private String cardSetSessionId;
-
-    private List<CardDTO> cards;
-
 }

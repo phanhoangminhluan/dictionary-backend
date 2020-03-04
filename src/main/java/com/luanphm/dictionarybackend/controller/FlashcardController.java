@@ -27,22 +27,32 @@ public class FlashcardController {
     @Autowired
     private StudiableCardService studiableCardService;
 
+    @GetMapping("card-set/{cardSetId}")
+    public ResponseEntity getById(@PathVariable String cardSetId) {
+
+        CardSetDTO cardSetDTO = cardSetService.getById(cardSetId);
+
+        return cardSetDTO != null
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, cardSetDTO, HttpStatus.CREATED)
+                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+    }
+
     @PostMapping
     public ResponseEntity createCardSet(@RequestBody CardSetInsertDTO cardSetInsertDto) {
 
-        boolean isSuccess = cardSetService.add(cardSetInsertDto);
+        CardSetDTO cardSetDTO = cardSetService.add(cardSetInsertDto);
 
-        return isSuccess
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CREATED)
-                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_FAIL, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+        return cardSetDTO != null
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, cardSetDTO, HttpStatus.CREATED)
+                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
     @PostMapping("cards")
     public ResponseEntity addMannyCards(@RequestBody CardInsertManyDTO cards) {
-        boolean isSuccess = cardService.addMany(cards);
-        return isSuccess
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CREATED)
-                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_FAIL, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+        CardSetDTO cardSetDTO = cardService.addMany(cards);
+        return cardSetDTO != null
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, cardSetDTO, HttpStatus.CREATED)
+                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
     @GetMapping("learn/{cardSetId}")
@@ -50,20 +60,30 @@ public class FlashcardController {
 
         CardSetSessionLearningDTO cardSetSession = cardSetSessionService.generateLearnSession(cardSetId);
         return cardSetSession != null
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, cardSetSession, HttpStatus.CREATED)
-                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_FAIL, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, cardSetSession, HttpStatus.CREATED)
+                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
-    @PutMapping("learn/remember")
-    public ResponseEntity remember(@RequestBody StudiableCardIdDTO studiableCardIdDTO) {
-        studiableCardService.increaseRememberCount(studiableCardIdDTO);
-        return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED);
+    @GetMapping("reset-progress/{cardSetId}")
+    public ResponseEntity resetProgress(@PathVariable String cardSetId) {
+
+        CardSetSessionLearningDTO cardSetSession = cardSetSessionService.reset(cardSetId);
+        return cardSetSession != null
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, cardSetSession, HttpStatus.CREATED)
+                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
-    @PutMapping("learn/forget")
-    public ResponseEntity forget(@RequestBody StudiableCardIdDTO studiableCardIdDTO) {
-        studiableCardService.increaseForgetCount(studiableCardIdDTO);
-        return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED);
+    @PutMapping("learn/remember/{cardSetSessionId}/{cardId}")
+    public ResponseEntity remember(@PathVariable String cardSetSessionId, @PathVariable String cardId) {
+        StudiableCardIdDTO studiableCardIdDTO = new StudiableCardIdDTO(cardId, cardSetSessionId);
+        StudiableCardLearnDTO studiableCardDTO = studiableCardService.increaseRememberCount(studiableCardIdDTO);
+        return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, studiableCardDTO, HttpStatus.ACCEPTED);
     }
 
+    @PutMapping("learn/forget/{cardSetSessionId}/{cardId}")
+    public ResponseEntity forget(@PathVariable String cardSetSessionId, @PathVariable String cardId) {
+        StudiableCardIdDTO studiableCardIdDTO = new StudiableCardIdDTO(cardId, cardSetSessionId);
+        StudiableCardLearnDTO studiableCardDTO = studiableCardService.increaseForgetCount(studiableCardIdDTO);
+        return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, studiableCardDTO, HttpStatus.ACCEPTED);
+    }
 }

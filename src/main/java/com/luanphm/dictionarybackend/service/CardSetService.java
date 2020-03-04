@@ -6,6 +6,6 @@ import com.luanphm.dictionarybackend.service.SharedService.MyInterfaceService;
 
 public interface CardSetService extends MyInterfaceService<String, CardSetDTO> {
 
-     boolean add(CardSetInsertDTO cardSetInsertDto);
+     CardSetDTO add(CardSetInsertDTO cardSetInsertDto);
 
 }

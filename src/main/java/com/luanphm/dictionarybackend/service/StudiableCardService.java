@@ -2,6 +2,7 @@ package com.luanphm.dictionarybackend.service;
 
 import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardIdDTO;
+import com.luanphm.dictionarybackend.dto.StudiableCardLearnDTO;
 import com.luanphm.dictionarybackend.entity.StudiableCardId;
 import com.luanphm.dictionarybackend.service.SharedService.MyInterfaceService;
 
@@ -9,8 +10,7 @@ public interface StudiableCardService extends MyInterfaceService<StudiableCardId
 
     void deleteById(StudiableCardIdDTO studiableCardIdDTO);
 
-    void increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO);
+    StudiableCardLearnDTO increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO);
 
-    void increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO);
-
+    StudiableCardLearnDTO increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO);
 }

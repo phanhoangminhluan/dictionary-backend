@@ -2,10 +2,13 @@ package com.luanphm.dictionarybackend.service;
 
 import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardIdDTO;
+import com.luanphm.dictionarybackend.dto.StudiableCardLearnDTO;
+import com.luanphm.dictionarybackend.entity.Card;
 import com.luanphm.dictionarybackend.entity.StudiableCard;
 import com.luanphm.dictionarybackend.entity.StudiableCardId;
 import com.luanphm.dictionarybackend.mapping.StudiableCardIdMapping;
 import com.luanphm.dictionarybackend.mapping.StudiableCardMapping;
+import com.luanphm.dictionarybackend.repository.card.CardRepository;
 import com.luanphm.dictionarybackend.repository.studiable_card.StudiableCardRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
 import org.mapstruct.factory.Mappers;
@@ -18,7 +21,12 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
     @Autowired
     private StudiableCardRepository studiableCardRepository;
 
+    @Autowired
+    private CardRepository cardRepository;
+
     private StudiableCardIdMapping studiableCardIdMapping = Mappers.getMapper(StudiableCardIdMapping.class);
+
+    private StudiableCardMapping studiableCardMapping = Mappers.getMapper(StudiableCardMapping.class);
 
     @Override
     protected void inject() {
@@ -32,16 +40,30 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
     }
 
     @Override
-    public void increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO) {
+    public StudiableCardLearnDTO increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO) {
         StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
         StudiableCard studiableCard = studiableCardRepository.getById(studiableCardId);
-        studiableCardRepository.increaseRememberCount(studiableCard);
+
+        if (studiableCard == null) return null;
+
+        Card card = cardRepository.getById(studiableCardId.getCard().getId());
+        studiableCardId.setCard(card);
+
+        studiableCard = studiableCardRepository.increaseRememberCount(studiableCard);
+
+        return studiableCardMapping.toLearnDto(studiableCard);
     }
 
     @Override
-    public void increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO) {
+    public StudiableCardLearnDTO increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO) {
         StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
         StudiableCard studiableCard = studiableCardRepository.getById(studiableCardId);
-        studiableCardRepository.increaseForgetCount(studiableCard);
+
+        Card card = cardRepository.getById(studiableCardId.getCard().getId());
+        studiableCardId.setCard(card);
+
+        studiableCard = studiableCardRepository.increaseForgetCount(studiableCard);
+        return studiableCardMapping.toLearnDto(studiableCard);
     }
+
 }

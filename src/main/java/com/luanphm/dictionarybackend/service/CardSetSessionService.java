@@ -8,4 +8,7 @@ public interface CardSetSessionService extends MyInterfaceService<String, CardSe
 
     CardSetSessionLearningDTO generateLearnSession(String cardSetId);
 
+    CardSetSessionLearningDTO reset(String cardSetId);
+
+
 }

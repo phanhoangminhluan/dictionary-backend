@@ -16,13 +16,13 @@ public abstract class CardMapping extends MappingHelper implements BaseMapping<C
 
     @Override
     @Mappings({
-            @Mapping(target = "cardSet", source = "dto.cardSetId")
+            @Mapping(target = "cardSet", source = "cardSetId")
     })
     public abstract Card toEntity(CardDTO dto);
 
     @Override
     @Mappings({
-        @Mapping(target = "cardSetId", source = "entity.cardSet")
+        @Mapping(target = "cardSetId", source = "cardSet")
     })
     public abstract CardDTO toDto(Card entity);
 

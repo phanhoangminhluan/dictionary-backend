@@ -5,7 +5,6 @@ import com.luanphm.dictionarybackend.dto.CardSetInsertDTO;
 import com.luanphm.dictionarybackend.entity.Card;
 import com.luanphm.dictionarybackend.entity.CardSet;
 import com.luanphm.dictionarybackend.mapping.CardSetMapping;
-import com.luanphm.dictionarybackend.repository.card.CardRepository;
 import com.luanphm.dictionarybackend.repository.card_set.CardSetRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
 import com.luanphm.dictionarybackend.utility.CommonUtilities;
@@ -22,8 +21,6 @@ public class CardSetServiceImpl extends MyAbstractService<CardSet, String, CardS
 
     private CardSetMapping cardSetMapping = Mappers.getMapper(CardSetMapping.class);
 
-    @Autowired
-    private CardRepository cardRepository;
 
     @Override
     protected void inject() {
@@ -40,7 +37,7 @@ public class CardSetServiceImpl extends MyAbstractService<CardSet, String, CardS
     }
 
     @Override
-    public boolean add(CardSetInsertDTO cardSetInsertDto) {
+    public CardSetDTO add(CardSetInsertDTO cardSetInsertDto) {
         CardSet cardSet = cardSetMapping.toCardSet(cardSetInsertDto);
         cardSet.setId(CommonUtilities.generateUniqueId());
         cardSet.setCreatedDate(CommonUtilities.getCurrentDateTime());
@@ -51,6 +48,11 @@ public class CardSetServiceImpl extends MyAbstractService<CardSet, String, CardS
         }
         Session session = getSession();
 
-        return cardSetRepository.add(session, cardSet);
+        boolean isSuccess = cardSetRepository.add(session, cardSet);
+
+        if (isSuccess) {
+            return cardSetMapping.toDto(cardSet);
+        }
+        return null;
     }
 }
