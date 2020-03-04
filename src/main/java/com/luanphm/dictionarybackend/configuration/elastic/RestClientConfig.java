@@ -19,16 +19,25 @@ import org.springframework.data.elasticsearch.core.EntityMapper;
 @Configuration
 public class RestClientConfig extends AbstractElasticsearchConfiguration {
 
-    @Value("${elastic.ip}")
-    public String elasticIp;
+    @Value("${elasticsearch.host}")
+    public String host;
+
+    @Value("${elasticsearch.port}")
+    private Integer port;
+
+    @Value("${elasticsearch.username}")
+    private String username;
+
+    @Value("${elasticsearch.password}")
+    private String password;
 
     @Override
     public RestHighLevelClient elasticsearchClient() {
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("elastic", "123456"));
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 
         RestClientBuilder builder = RestClient.builder(
-                new HttpHost(elasticIp, 9200))
+                new HttpHost(host, port))
                 .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
                     @Override
                     public HttpAsyncClientBuilder customizeHttpClient(

@@ -47,12 +47,12 @@ public class WordDetailController {
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_IS_EXISTED,  ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
-    @PutMapping(value = "{word}")
-    public ResponseEntity updateWord(@PathVariable String word, @RequestBody WordDetailDTO wordDetailDTO) throws JsonProcessingException {
+    @PutMapping
+    public ResponseEntity updateWord(@RequestBody WordDetailDTO wordDetailDTO) throws JsonProcessingException {
         boolean isSuccess = wordDetailService.update(wordDetailDTO);
 
         return isSuccess
-                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.NO_CONTENT)
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.WORK_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_NOT_FOUND,  ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
     }
 
