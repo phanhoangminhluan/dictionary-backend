@@ -97,10 +97,15 @@ public abstract class ElasticSearchHandler<T extends BaseEntity> {
     }
 
     public boolean create(T document) {
-        boolean isExist = getById((String) document.getId()) != null;
-        if (!isExist) {
-            save(document);
-            return true;
+        try {
+            boolean isExist = getById((String) document.getId()) != null;
+            if (!isExist) {
+                save(document);
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
