@@ -1,8 +1,10 @@
 package com.luanphm.dictionarybackend.mapping;
 
 
+import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.*;
 import com.luanphm.dictionarybackend.entity.Card;
+import com.luanphm.dictionarybackend.entity.CardSetSession;
 import com.luanphm.dictionarybackend.entity.StudiableCard;
 import com.luanphm.dictionarybackend.entity.StudiableCardId;
 import com.luanphm.dictionarybackend.mapping.common.BaseMapping;
@@ -17,12 +19,39 @@ import java.util.List;
 public abstract class StudiableCardMapping extends MappingHelper implements BaseMapping<StudiableCard, StudiableCardDTO> {
 
 
-    @Override
-    public abstract StudiableCard toEntity(StudiableCardDTO dto);
+    public StudiableCardDTO toDto (StudiableCard studiableCard) {
+        if (studiableCard == null) return null;
+        StudiableCardDTO studiableCardDTO = StudiableCardDTO
+                .builder()
+                .cardId(studiableCard.getId().getCard().getId())
+                .cardSetSessionId(studiableCard.getId().getCardSetSession().getId())
+                .remember(studiableCard.isRemember())
+                .rememberCount(studiableCard.getRememberCount())
+                .forgetCount(studiableCard.getForgetCount())
+                .build();
+        return studiableCardDTO;
+    }
 
-    @Override
-    @Mapping(source = "remember", target = "remember")
-    public abstract StudiableCardDTO toDto(StudiableCard entity);
+    public StudiableCard toEntity(StudiableCardDTO studiableCardDto) {
+        if (studiableCardDto == null) return null;
+        StudiableCard studiableCard = StudiableCard.builder()
+                .id(StudiableCardId
+                        .builder()
+                        .card(Card
+                                .builder()
+                                .id(studiableCardDto.getCardId())
+                                .build())
+                        .cardSetSession(CardSetSession
+                                .builder()
+                                .id(studiableCardDto.getCardSetSessionId())
+                                .build())
+                        .build())
+                .remember(studiableCardDto.isRemember())
+                .rememberCount(studiableCardDto.getRememberCount())
+                .forgetCount(studiableCardDto.getForgetCount())
+                .build();
+        return studiableCard;
+    }
 
     @Mappings({
             @Mapping(source = "dto.cardId", target = "card"),
@@ -30,8 +59,22 @@ public abstract class StudiableCardMapping extends MappingHelper implements Base
     })
     public abstract StudiableCardId toEntity(StudiableCardIdDTO dto);
 
-    @Mapping(source = "remember", target = "remember")
-    public abstract StudiableCardLearnDTO toLearnDto(StudiableCard entity);
+    public StudiableCardLearnDTO toLearnDto(StudiableCard entity) {
+        if (entity == null) return null;
+        StudiableCardLearnDTO studiableCardDTO = StudiableCardLearnDTO
+                .builder()
+                .cardId(entity.getId().getCard().getId())
+                .cardSetId(entity.getId().getCard().getCardSet().getId())
+                .cardSetSessionId(entity.getId().getCardSetSession().getId())
+                .term(entity.getId().getCard().getTerm())
+                .definition(entity.getId().getCard().getDefinition())
+                .remember(entity.isRemember())
+                .rememberCount(entity.getRememberCount())
+                .forgetCount(entity.getForgetCount())
+                .username(SecurityUtils.getCurrentUser())
+                .build();
+        return studiableCardDTO;
+    }
 
     @Mappings({
             @Mapping(source = "dto.cardSetSession", target = "cardSetSessionId"),

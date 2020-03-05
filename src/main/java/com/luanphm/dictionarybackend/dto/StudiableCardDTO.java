@@ -9,7 +9,9 @@ import lombok.*;
 @Builder
 public class StudiableCardDTO {
 
-    private StudiableCardIdDTO id;
+    private String cardId;
+
+    private String cardSetSessionId;
 
     private boolean remember;
 

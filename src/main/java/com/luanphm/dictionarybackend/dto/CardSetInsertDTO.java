@@ -13,8 +13,6 @@ public class CardSetInsertDTO {
 
     private String name;
 
-    private String username;
-
     private List<CardInsertDTO> cards;
 
 

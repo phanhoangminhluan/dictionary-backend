@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +17,7 @@ public class CardSetSessionDTO {
 
     private String createdDate;
 
-    private boolean isOpen = true;
-
     private String cardSetId;
+
+    private List<StudiableCardDTO> studiableCards;
 }

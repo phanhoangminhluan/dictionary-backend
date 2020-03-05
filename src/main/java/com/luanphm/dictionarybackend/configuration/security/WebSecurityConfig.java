@@ -1,8 +1,6 @@
 package com.luanphm.dictionarybackend.configuration.security;
 
-import com.luanphm.dictionarybackend.configuration.security.JwtAuthenticationFilter;
-import com.luanphm.dictionarybackend.configuration.security.JwtAuthorizationFilter;
-import com.luanphm.dictionarybackend.constant.SecurityConstants;
+import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -38,8 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                    .antMatchers(SecurityConstants.PUBLIC_ENDPOINTS).permitAll()
-                    .antMatchers("/").hasRole(SecurityConstants.ROLE_ADMIN)
+                    .antMatchers(SecurityUtils.PUBLIC_ENDPOINTS).permitAll()
+                    .antMatchers("/").hasRole(SecurityUtils.ROLE_ADMIN)
                     .anyRequest()
                     .authenticated()
                 .and()

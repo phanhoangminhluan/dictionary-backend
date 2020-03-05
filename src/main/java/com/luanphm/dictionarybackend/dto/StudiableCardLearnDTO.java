@@ -1,17 +1,22 @@
 package com.luanphm.dictionarybackend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class StudiableCardLearnDTO {
 
-    private StudiableCardIdLearnDTO id;
+    private String cardId;
+    private String cardSetId;
+    private String cardSetSessionId;
+
+    private String term;
+    private String definition;
+
+    private String username;
 
     private boolean remember;
 

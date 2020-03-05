@@ -54,6 +54,5 @@ public abstract class CardSetMapping extends MappingHelper implements BaseMappin
 
     public abstract List<Card> toCardsFromCardInsertDto(List<CardInsertDTO> dtos);
 
-    @Mapping(source = "username", target = "user")
     public abstract CardSet toCardSet(CardSetInsertDTO cardSetInsertDTO);
 }

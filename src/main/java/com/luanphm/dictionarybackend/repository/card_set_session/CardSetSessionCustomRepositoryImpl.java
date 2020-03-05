@@ -24,7 +24,6 @@ public class CardSetSessionCustomRepositoryImpl extends MyAbstractSession implem
                 .id(CommonUtilities.generateUniqueId())
                 .cardSet(cardSet)
                 .createdDate(CommonUtilities.getCurrentDateTime())
-                .isOpen(true)
                 .build();
         try {
             session.save(cardSetSession);

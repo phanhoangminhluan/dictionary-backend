@@ -61,7 +61,11 @@ public abstract class MyAbstractController<ID, D> {
 
     @DeleteMapping("{id}")
     public ResponseEntity deleteById(@PathVariable("id") ID id) {
-        service.deleteById(id);
-        return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.DELETED, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED);
+        D dto = service.deleteById(id);
+        if (dto == null) {
+            return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+        } else {
+            return ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.DELETED, dto, HttpStatus.ACCEPTED);
+        }
     }
 }

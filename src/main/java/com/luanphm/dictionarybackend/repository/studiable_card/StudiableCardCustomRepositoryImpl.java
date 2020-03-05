@@ -12,21 +12,38 @@ public class StudiableCardCustomRepositoryImpl extends MyAbstractSession impleme
        @Override
        @Transactional
     public StudiableCard increaseRememberCount(StudiableCard studiableCard) {
+
+        if (studiableCard == null) return null;
+
         Session session = getSession();
         studiableCard.setRemember(true);
         studiableCard.increaseRememberCount();
-        session.update(studiableCard);
-        return studiableCard;
+        try {
+            session.update(studiableCard);
+            return studiableCard;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     @Transactional
     public StudiableCard increaseForgetCount(StudiableCard studiableCard) {
+
+        if (studiableCard == null) return null;
+
         Session session = getSession();
         studiableCard.setRemember(false);
         studiableCard.increaseForgetCount();
-        session.save(studiableCard);
-        return studiableCard;
+
+        try {
+            session.update(studiableCard);
+            return studiableCard;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

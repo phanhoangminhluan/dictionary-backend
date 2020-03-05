@@ -1,6 +1,8 @@
 package com.luanphm.dictionarybackend.constant;
 
-public class SecurityConstants {
+import org.springframework.security.core.context.SecurityContextHolder;
+
+public class SecurityUtils {
 
     public static final String[] PUBLIC_ENDPOINTS = {
             "/login",
@@ -18,6 +20,10 @@ public class SecurityConstants {
     };
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String ROLE_USER = "USER";
+
+    public static final String getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
 
 }

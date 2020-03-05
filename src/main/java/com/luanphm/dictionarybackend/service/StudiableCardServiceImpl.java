@@ -1,9 +1,9 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardIdDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardLearnDTO;
-import com.luanphm.dictionarybackend.entity.Card;
 import com.luanphm.dictionarybackend.entity.StudiableCard;
 import com.luanphm.dictionarybackend.entity.StudiableCardId;
 import com.luanphm.dictionarybackend.mapping.StudiableCardIdMapping;
@@ -41,13 +41,9 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
 
     @Override
     public StudiableCardLearnDTO increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO) {
-        StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
-        StudiableCard studiableCard = studiableCardRepository.getById(studiableCardId);
+        StudiableCard studiableCard = getStudiableCardById(studiableCardIdDTO);
 
         if (studiableCard == null) return null;
-
-        Card card = cardRepository.getById(studiableCardId.getCard().getId());
-        studiableCardId.setCard(card);
 
         studiableCard = studiableCardRepository.increaseRememberCount(studiableCard);
 
@@ -56,14 +52,26 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
 
     @Override
     public StudiableCardLearnDTO increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO) {
-        StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
-        StudiableCard studiableCard = studiableCardRepository.getById(studiableCardId);
 
-        Card card = cardRepository.getById(studiableCardId.getCard().getId());
-        studiableCardId.setCard(card);
+        StudiableCard studiableCard = getStudiableCardById(studiableCardIdDTO);
+
+        if (studiableCard == null) return null;
 
         studiableCard = studiableCardRepository.increaseForgetCount(studiableCard);
+
         return studiableCardMapping.toLearnDto(studiableCard);
+    }
+
+    private StudiableCard getStudiableCardById(StudiableCardIdDTO studiableCardIdDTO) {
+        StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
+
+        String username = SecurityUtils.getCurrentUser();
+        StudiableCard studiableCard = studiableCardRepository
+                .getById_Card_IdAndId_Card_CardSet_User_Id(
+                        studiableCardId.getCard().getId(),
+                        username
+                );
+        return studiableCard;
     }
 
 }

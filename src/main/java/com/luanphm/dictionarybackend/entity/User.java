@@ -1,6 +1,9 @@
 package com.luanphm.dictionarybackend.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -21,18 +24,11 @@ public class User extends BaseEntity<String> {
     @JoinColumn(name = "role_id")
     private Role role;
 
-   public User(String id, String email, String password, Role role) {
+    @Builder
+    public User(String id, String email, String password, Role role) {
        this.id = id;
        this.email = email;
        this.password = password;
        this.role = role;
    }
-
-    public User(String id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
 }

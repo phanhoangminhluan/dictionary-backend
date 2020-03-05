@@ -1,5 +1,6 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.CardDTO;
 import com.luanphm.dictionarybackend.dto.CardInsertManyDTO;
 import com.luanphm.dictionarybackend.dto.CardSetDTO;
@@ -42,8 +43,9 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     @Transactional
     public CardSetDTO addMany(CardInsertManyDTO dto) {
 
-        CardSet cardSet = cardSetRepository.getById(dto.getCardSetId());
+        String username = SecurityUtils.getCurrentUser();
 
+        CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, dto.getCardSetId());
         if (cardSet == null) return null;
 
         List<Card> cards = cardMapping.toCardsFromCardInsertDto(dto.getCards());
@@ -53,9 +55,71 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
             card.setCardSet(cardSet);
             cardSet.getCards().add(card);
         }
+        boolean isUpdated = cardSetRepository.update(getSession(), cardSet);
+        if (!isUpdated) return null;
 
-        CardSetDTO cardSetDTO = cardSetMapping.toDto(cardSet);
-
-        return cardSetDTO;
+        return cardSetMapping.toDto(cardSet);
     }
+
+    private Card getCardById(String id) {
+        Card card = repository.getById(id);
+        if (card == null) return null;
+
+        String username = SecurityUtils.getCurrentUser();
+        String usernameOfCard = card.getCardSet().getUser().getId();
+        if (!username.equals(usernameOfCard)) return null;
+
+        return card;
+    }
+
+    @Override
+    public CardDTO getById(String id) {
+
+        String username = SecurityUtils.getCurrentUser();
+
+        Card card = cardRepository.getByCardSet_User_IdAndId(username, id);
+        if (card == null) return null;
+        return cardMapping.toDto(card);
+    }
+
+    @Override
+    public boolean update(CardDTO dto) {
+        String username = SecurityUtils.getCurrentUser();
+        Card card = cardRepository.getByCardSet_User_IdAndId(username, dto.getId());
+
+        if (card == null);
+
+        card.setTerm(dto.getTerm());
+        card.setDefinition(dto.getDefinition());
+
+        boolean isUpdated = repository.update(getSession(), card);
+        return isUpdated;
+    }
+
+    @Override
+    public List<CardDTO> getAll() {
+        String username = SecurityUtils.getCurrentUser();
+        List<Card> cards = cardRepository.getByCardSet_User_Id(username);
+
+        if (cards == null || cards.size() == 0) return null;
+
+        return cardMapping.toDtos(cards);
+    }
+
+    @Override
+    public CardDTO deleteById(String id) {
+
+        Card card = getCardById(id);
+        if (card == null) return null;
+
+        try {
+            cardRepository.delete(card);
+            return mappingHandler.toDto(card);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }

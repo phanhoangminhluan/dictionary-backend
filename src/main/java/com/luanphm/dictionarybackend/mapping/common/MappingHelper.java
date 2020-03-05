@@ -1,8 +1,9 @@
 package com.luanphm.dictionarybackend.mapping.common;
 
-import com.luanphm.dictionarybackend.dto.CardDTO;
 import com.luanphm.dictionarybackend.entity.*;
-import org.springframework.security.core.parameters.P;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MappingHelper {
 
@@ -66,6 +67,25 @@ public class MappingHelper {
         }
         return cardSetSession.getId();
     }
+
+    public List<CardSetSession> cardSetSessions(String cardSetSessionId) {
+        if (cardSetSessionId == null) {
+            return null;
+        }
+        List<CardSetSession> cardSetSessions = new ArrayList<>();
+        CardSetSession cardSetSession = new CardSetSession();
+        cardSetSession.setId(cardSetSessionId);
+        cardSetSessions.add(cardSetSession);
+        return cardSetSessions;
+    }
+
+    public String cardSetSessionIds(List<CardSetSession> cardSetSessions) {
+        if (cardSetSessions == null || cardSetSessions.size() == 0) {
+            return null;
+        }
+        return cardSetSessions.get(0).getId();
+    }
+
 
     public Card card(String cardId) {
         if (cardId == null) {

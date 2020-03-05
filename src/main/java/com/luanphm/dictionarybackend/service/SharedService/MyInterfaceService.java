@@ -12,5 +12,6 @@ public interface MyInterfaceService<ID, D> {
 
     boolean update(D dto);
 
-    void deleteById(ID id);
+    D deleteById(ID id);
+
 }

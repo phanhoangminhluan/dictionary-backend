@@ -49,11 +49,15 @@ public abstract class MyAbstractService<E, ID extends Serializable, D> extends M
         }
     }
 
-    public void deleteById(ID id) {
+    public D deleteById(ID id) {
         try {
+            E entity = repository.getById(id);
+            if (entity == null) return null;
             repository.deleteById(id);
+            return mappingHandler.toDto(entity);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

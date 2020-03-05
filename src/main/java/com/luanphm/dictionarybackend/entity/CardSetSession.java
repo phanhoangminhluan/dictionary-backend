@@ -19,9 +19,6 @@ public class CardSetSession extends BaseEntity<String> {
     private String createdDate;
 
 
-    @Column(name = "is_open")
-    private boolean isOpen;
-
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "card_set_id")
     private CardSet cardSet;
@@ -33,10 +30,9 @@ public class CardSetSession extends BaseEntity<String> {
     private List<StudiableCard> studiableCards;
 
     @Builder
-    public CardSetSession(String id, String createdDate, boolean isOpen, CardSet cardSet, List<StudiableCard> studiableCards) {
+    public CardSetSession(String id, String createdDate, CardSet cardSet, List<StudiableCard> studiableCards) {
         super(id);
         this.createdDate = createdDate;
-        this.isOpen = isOpen;
         this.cardSet = cardSet;
         this.studiableCards = studiableCards;
     }

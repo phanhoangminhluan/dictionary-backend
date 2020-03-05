@@ -1,5 +1,6 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.CardSetSessionDTO;
 import com.luanphm.dictionarybackend.dto.CardSetSessionLearningDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
@@ -39,12 +40,44 @@ public class CardSetSessionServiceImpl extends MyAbstractService<CardSetSession,
     }
 
     @Override
-    public CardSetSessionLearningDTO generateLearnSession(String cardSetId) {
+    public CardSetSessionDTO getById(String id) {
+        String username = SecurityUtils.getCurrentUser();
+        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndId(username, id);
+        if (cardSetSession == null) return null;
+        return mappingHandler.toDto(cardSetSession);
+    }
 
-        CardSetSession cardSetSession = getCardSetSessionByCardSetId(cardSetId);
+    @Override
+    public List<CardSetSessionDTO> getAll() {
+        String username = SecurityUtils.getCurrentUser();
+        List<CardSetSession> cardSetSessions = cardSetSessionRepository.getByCardSet_User_Id(username);
+        if (cardSetSessions == null || cardSetSessions.size() == 0) return null;
+        return mappingHandler.toDtos(cardSetSessions);
+    }
+
+
+    @Override
+    public CardSetSessionDTO deleteById(String id) {
+        String username = SecurityUtils.getCurrentUser();
+        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndId(username, id);
+
+        if (cardSetSession == null) return null;
+        try {
+            cardSetSessionRepository.delete(cardSetSession);
+            return mappingHandler.toDto(cardSetSession);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public CardSetSessionLearningDTO generateLearnSession(String cardSetId) {
+        String username = SecurityUtils.getCurrentUser();
+        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndId(username, cardSetId);
 
         if (cardSetSession == null) {
-            CardSet cardSet = cardSetRepository.getById(cardSetId);
+            CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, cardSetId);
             if (cardSet == null) return null;
 
             cardSetSession = cardSetSessionRepository.generateCardSetSession(cardSet);
@@ -77,7 +110,8 @@ public class CardSetSessionServiceImpl extends MyAbstractService<CardSetSession,
 
     public CardSetSession deleteByCardSetId(String cardSetId) {
         try {
-            CardSetSession cardSetSession = cardSetSessionRepository.findByCardSetId(cardSetId);
+            String username = SecurityUtils.getCurrentUser();
+            CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndCardSet_Id(username, cardSetId);
             if (cardSetSession == null) return null;
 
             studiableCardRepository.deleteById_CardSetSession_Id(cardSetSession.getId());
@@ -90,7 +124,4 @@ public class CardSetSessionServiceImpl extends MyAbstractService<CardSetSession,
         }
     }
 
-    private CardSetSession getCardSetSessionByCardSetId(String cardSetId) {
-        return cardSetSessionRepository.findByCardSetId(cardSetId);
-    }
 }

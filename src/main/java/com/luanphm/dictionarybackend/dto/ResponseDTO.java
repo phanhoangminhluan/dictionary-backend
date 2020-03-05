@@ -16,9 +16,10 @@ public class ResponseDTO {
 
     public static final boolean SUCCESS = true;
     public static final boolean FAIL = false;
-    public static final String NOT_FOUND = "Can not find any record";
+    public static final String NOT_FOUND = "Can not find any records";
     public static final String RUN_SUCCESSFULLY = "Run successfully";
     public static final String RUN_UNSUCCESSFULLY = "Run unsuccessfully";
+    public static final String CLOSED_ENDPOINT = "This endpoint has been closed. Please use another one !";
     public static final String WORD_NOT_FOUND = "There is no definition of this word";
     public static final String WORD_IS_EXISTED = "This word has been existed.";
     public static final String ADDED = "Added";
@@ -32,6 +33,17 @@ public class ResponseDTO {
                     .body(body)
                 .build();
         ResponseEntity responseEntity = new ResponseEntity<>(responseDTO, status);
+        return responseEntity;
+    }
+
+    public static ResponseEntity serviceUnavailable(String messages) {
+
+        ResponseDTO responseDTO =  ResponseDTO.builder()
+                .isSuccess(FAIL)
+                .messages(messages.isEmpty() ? CLOSED_ENDPOINT : messages)
+                .body(EMPTY_BODY)
+                .build();
+        ResponseEntity responseEntity = new ResponseEntity<>(responseDTO, HttpStatus.SERVICE_UNAVAILABLE);
         return responseEntity;
     }
 }
