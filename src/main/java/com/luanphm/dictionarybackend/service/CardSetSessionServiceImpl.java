@@ -74,7 +74,7 @@ public class CardSetSessionServiceImpl extends MyAbstractService<CardSetSession,
     @Override
     public CardSetSessionLearningDTO generateLearnSession(String cardSetId) {
         String username = SecurityUtils.getCurrentUser();
-        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndId(username, cardSetId);
+        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndCardSet_Id(username, cardSetId);
 
         if (cardSetSession == null) {
             CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, cardSetId);
