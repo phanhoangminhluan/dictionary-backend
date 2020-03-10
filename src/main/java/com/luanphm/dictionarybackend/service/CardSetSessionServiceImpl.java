@@ -3,6 +3,7 @@ package com.luanphm.dictionarybackend.service;
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.CardSetSessionDTO;
 import com.luanphm.dictionarybackend.dto.CardSetSessionLearningDTO;
+import com.luanphm.dictionarybackend.dto.StudiableCardCountDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
 import com.luanphm.dictionarybackend.entity.CardSet;
 import com.luanphm.dictionarybackend.entity.CardSetSession;
@@ -123,5 +124,26 @@ public class CardSetSessionServiceImpl extends MyAbstractService<CardSetSession,
             return null;
         }
     }
+
+    public StudiableCardCountDTO countRememberAndForget(String cardSetId) {
+        String username = SecurityUtils.getCurrentUser();
+        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndCardSet_Id(username, cardSetId);
+        if (cardSetSession == null) return null;
+        int numberOfRememberWord = 0;
+        int numberOfForgetWord = 0;
+        List<StudiableCard> studiableCards = cardSetSession.getStudiableCards();
+
+        if (studiableCards == null || studiableCards.size() == 0) return null;
+
+        for (StudiableCard studiableCard : cardSetSession.getStudiableCards()) {
+            if (studiableCard.isRemember()) {
+                numberOfRememberWord++;
+            } else {
+                numberOfForgetWord++;
+            }
+        }
+        return StudiableCardCountDTO.builder().rememberCount(numberOfRememberWord).forgetCount(numberOfForgetWord).build();
+    }
+
 
 }

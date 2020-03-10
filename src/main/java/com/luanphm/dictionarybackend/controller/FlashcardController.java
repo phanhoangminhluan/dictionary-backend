@@ -1,9 +1,6 @@
 package com.luanphm.dictionarybackend.controller;
 
-import com.luanphm.dictionarybackend.dto.CardSetSessionLearningDTO;
-import com.luanphm.dictionarybackend.dto.ResponseDTO;
-import com.luanphm.dictionarybackend.dto.StudiableCardIdDTO;
-import com.luanphm.dictionarybackend.dto.StudiableCardLearnDTO;
+import com.luanphm.dictionarybackend.dto.*;
 import com.luanphm.dictionarybackend.service.CardSetSessionService;
 import com.luanphm.dictionarybackend.service.StudiableCardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +52,14 @@ public class FlashcardController {
         CardSetSessionLearningDTO cardSetSession = cardSetSessionService.reset(cardSetId);
         return cardSetSession != null
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, cardSetSession, HttpStatus.CREATED)
+                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+    }
+
+    @GetMapping("count/{cardSetId}")
+    public ResponseEntity countRememberAndForget(@PathVariable String cardSetId) {
+        StudiableCardCountDTO studiableCardCountDTO = cardSetSessionService.countRememberAndForget(cardSetId);
+        return studiableCardCountDTO != null
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, studiableCardCountDTO, HttpStatus.OK)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 }
