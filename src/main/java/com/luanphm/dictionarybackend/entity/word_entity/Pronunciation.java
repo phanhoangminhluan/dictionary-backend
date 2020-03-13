@@ -8,5 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Pronunciation {
-    private String all;
+    private String ukPhonetic;
+    private String usPhonetic;
 }

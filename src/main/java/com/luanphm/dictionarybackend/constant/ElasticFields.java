@@ -31,4 +31,5 @@ public class ElasticFields {
     public static final String EXAMPLES = "examples";
     public static final String DERIVATIONS = "derivations";
     public static final String ATTRIBUTES = "attributes";
+    public static final String LEVEL = "level";
 }

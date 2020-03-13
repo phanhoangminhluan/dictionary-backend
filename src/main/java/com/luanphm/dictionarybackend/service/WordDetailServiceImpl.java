@@ -3,11 +3,12 @@ package com.luanphm.dictionarybackend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.luanphm.dictionarybackend.dto.WordDetailDTO;
 import com.luanphm.dictionarybackend.entity.WordDetail;
+import com.luanphm.dictionarybackend.mapping.WordDetailMapping;
 import com.luanphm.dictionarybackend.repository.word_detail.WordDetailRepository;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +19,8 @@ public class WordDetailServiceImpl implements WordDetailService {
 
     @Autowired
     private WordDetailRepository wordDetailRapidApiRepository;
+
+    private WordDetailMapping wordDetailMapping = Mappers.getMapper(WordDetailMapping.class);
 
 
     @Override
@@ -34,15 +37,8 @@ public class WordDetailServiceImpl implements WordDetailService {
             isSuccess = true;
         }
         return isSuccess
-                ? WordDetailDTO.builder()
-                    .word(wordDetail.getWord())
-                    .frequency(wordDetail.getFrequency())
-                    .pronunciation(wordDetail.getPronunciation().getAll())
-                    .syllableList(wordDetail.getSyllables().getSyllableList())
-                    .definitionDetails(wordDetail.getDefinitionDetails())
-                .build()
+                ? wordDetailMapping.toDto(wordDetail)
                 : null;
-
     }
 
     @Override
@@ -57,24 +53,14 @@ public class WordDetailServiceImpl implements WordDetailService {
         } else {
             isSuccess = true;
         }
-        List<WordDetailDTO> dtos = new ArrayList<>();
-        if (isSuccess) {
-            wordDetails.forEach(detail -> {
-                dtos.add(WordDetailDTO.builder()
-                            .word(detail.getWord())
-                            .frequency(detail.getFrequency())
-                            .pronunciation(detail.getPronunciation().getAll())
-                            .syllableList(detail.getSyllables().getSyllableList())
-                            .definitionDetails(detail.getDefinitionDetails())
-                        .build() );
-            });
-        }
+        List<WordDetailDTO> dtos = wordDetailMapping.toDtos(wordDetails);
         return isSuccess ? dtos : null;
     }
 
     @Override
     public boolean update(WordDetailDTO dto) throws JsonProcessingException {
-        WordDetail wordDetail = new WordDetail(dto);
+        if (dto == null) return false;
+        WordDetail wordDetail = wordDetailMapping.toEntity(dto);
         return wordDetailElasticRepository.updateWord(wordDetail);
     }
 
@@ -85,7 +71,8 @@ public class WordDetailServiceImpl implements WordDetailService {
 
     @Override
     public boolean create(WordDetailDTO wordDetailDTO) {
-        WordDetail wordDetail = new WordDetail(wordDetailDTO);
+        if (wordDetailDTO == null) return false;
+        WordDetail wordDetail = wordDetailMapping.toEntity(wordDetailDTO);
         wordDetail.setId(wordDetail.getWord());
         return wordDetailElasticRepository.createWord(wordDetail);
     }

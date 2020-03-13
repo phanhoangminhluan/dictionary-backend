@@ -19,6 +19,9 @@ public class DefinitionDetail {
     @Field(ElasticFields.PART_OF_SPEECH)
     private String partOfSpeech;
 
+    @Field(ElasticFields.LEVEL)
+    private String level;
+
     @Field(ElasticFields.EXAMPLES)
     private List<String> examples;
 
