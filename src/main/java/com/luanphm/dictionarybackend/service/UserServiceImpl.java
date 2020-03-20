@@ -32,6 +32,6 @@ public class UserServiceImpl implements UserService {
     public void addUser(UserRegisterDTO dto) {
         Session session = entityManager.unwrap(Session.class);
         dto.setPassword(BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt(12)));
-        userRepository.add(session, new User(dto.getUsername(), dto.getEmail(), dto.getPassword(), new Role(dto.getRoleId())));
+        userRepository.add(session, new User(dto.getUsername(), dto.getEmail(), dto.getPassword(), new Role(2)));
     }
 }
