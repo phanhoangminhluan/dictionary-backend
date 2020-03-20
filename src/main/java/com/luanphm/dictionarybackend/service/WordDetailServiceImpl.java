@@ -18,7 +18,7 @@ public class WordDetailServiceImpl implements WordDetailService {
     private WordDetailRepository wordDetailElasticRepository;
 
     @Autowired
-    private WordDetailRepository wordDetailRapidApiRepository;
+    private WordDetailRepository wordDetailCambridgeCrawlingRepository;
 
     private WordDetailMapping wordDetailMapping = Mappers.getMapper(WordDetailMapping.class);
 
@@ -28,7 +28,7 @@ public class WordDetailServiceImpl implements WordDetailService {
         boolean isSuccess = false;
         WordDetail wordDetail = wordDetailElasticRepository.getWord(word);
         if (wordDetail == null) {
-            wordDetail = wordDetailRapidApiRepository.getWord(word);
+            wordDetail = wordDetailCambridgeCrawlingRepository.getWord(word);
             if (wordDetail != null) {
                 wordDetailElasticRepository.saveWord(wordDetail);
                 isSuccess = true;
@@ -46,7 +46,7 @@ public class WordDetailServiceImpl implements WordDetailService {
         boolean isSuccess = false;
         List<WordDetail> wordDetails = wordDetailElasticRepository.getByTerm(term, value);
         if (wordDetails == null) {
-            wordDetails = wordDetailRapidApiRepository.getByTerm(term, value);
+            wordDetails = wordDetailCambridgeCrawlingRepository.getByTerm(term, value);
             if (wordDetails != null) {
                 isSuccess = true;
             }

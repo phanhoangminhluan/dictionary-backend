@@ -1,19 +1,11 @@
 package com.luanphm.dictionarybackend.utility;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.luanphm.dictionarybackend.entity.Hint;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.common.xcontent.XContent;
-import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.UpdateQuery;
-import org.springframework.data.elasticsearch.core.query.UpdateQueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,20 +40,6 @@ public class ElasticUtilities {
 
         return boolQueryBuilder;
     }
-
-//    public static final UpdateQuery prepareUpdateQuery(String id, Object document, Class clazz) throws JsonProcessingException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String jsonDoc = objectMapper.writeValueAsString(document);
-//
-//        UpdateRequest updateRequest = new UpdateRequest()
-//                .id(id)
-//                .doc(jsonDoc);
-//        UpdateQuery updateQuery = new UpdateQueryBuilder()
-//                .withUpdateRequest(updateRequest)
-//                .withClass(clazz)
-//                .build();
-//        return updateQuery;
-//    }
 
     public static final IndexQuery prepareIndexQuery(String id, Object document) {
         IndexQuery indexQuery = new IndexQueryBuilder()
