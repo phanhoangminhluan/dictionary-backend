@@ -62,7 +62,7 @@ public abstract class ElasticSearchHandler<T extends BaseEntity> {
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
-                .withSort(SortBuilders.fieldSort(fieldSort).order(SortOrder.ASC))
+                .withSort(SortBuilders.fieldSort(fieldSort).order(SortOrder.DESC))
                 .build();
         return elasticsearchOperations.queryForList(searchQuery, getIndexClass());
     }

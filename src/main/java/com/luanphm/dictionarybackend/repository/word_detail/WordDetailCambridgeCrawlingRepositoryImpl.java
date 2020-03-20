@@ -15,14 +15,14 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository(value = "wordDetailRapidApiRepository")
-public class WordDetailRapidApiRepositoryImpl implements WordDetailRepository {
+@Repository(value = "wordDetailCambridgeCrawlingRepository")
+public class WordDetailCambridgeCrawlingRepositoryImpl implements WordDetailRepository {
 
     @Autowired
     private RapidApiRequestHandler<WordDetail> rapidApiRequestHandler;
     private Navigator navigator;
 
-    public WordDetailRapidApiRepositoryImpl() {
+    public WordDetailCambridgeCrawlingRepositoryImpl() {
          navigator = new Navigator("drivers/chromedriver");
     }
 

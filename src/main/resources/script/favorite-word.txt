@@ -1,0 +1,22 @@
+DELETE favorite-word
+
+PUT favorite-word
+{
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "user_id": {
+        "type": "keyword"
+      },
+      "word": {
+        "type": "keyword"
+      },
+      "created-date": {
+        "type": "date",
+        "format": "yyyy/MM/dd HH:mm:ss"
+      }
+    }
+  }
+}
