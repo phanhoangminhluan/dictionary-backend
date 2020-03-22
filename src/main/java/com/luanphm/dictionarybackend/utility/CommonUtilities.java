@@ -14,6 +14,11 @@ public class CommonUtilities {
         return dateFormat.format(date); //2016/11/16 12:08:43
     }
 
+    public static String getCurrentDateTimeForRedis() {
+        String dateTime = getCurrentDateTime();
+        return dateTime.replace("/", "").replace(":", "").replace(" ", "");
+    }
+
     public static String generateUniqueId() {
         return UUID.randomUUID().toString();
     }

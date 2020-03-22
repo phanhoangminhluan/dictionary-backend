@@ -1,6 +1,7 @@
 package com.luanphm.dictionarybackend.configuration.security;
 
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
+import com.luanphm.dictionarybackend.service.JsonWebTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("userDetailServiceImpl")
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private JsonWebTokenService jsonWebTokenService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -41,8 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest()
                     .authenticated()
                 .and()
-                    .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                    .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService));
+                    .logout()
+                    .logoutSuccessUrl("/logout-handler")
+                .and()
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager(), jsonWebTokenService))
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService, jsonWebTokenService));
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }

@@ -25,5 +25,4 @@ public class SecurityUtils {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-
 }
