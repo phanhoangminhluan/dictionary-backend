@@ -1,5 +1,6 @@
 package com.luanphm.dictionarybackend.repository.user;
 
-public interface UserCustomRepository {
+import com.luanphm.dictionarybackend.entity.User;
 
+public interface UserCustomRepository {
 }
