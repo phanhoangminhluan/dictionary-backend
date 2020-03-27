@@ -2,7 +2,6 @@ package com.luanphm.dictionarybackend.service;
 
 import com.luanphm.dictionarybackend.configuration.security.JwtAuthenticationFilter;
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
-import com.luanphm.dictionarybackend.repository.json_web_token.JsonWebTokenRepository;
 import com.luanphm.dictionarybackend.utility.CommonUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,9 +15,6 @@ public class JsonWebTokenServiceImpl implements JsonWebTokenService {
 
     @Autowired
     public RedisTemplate<String, String> redisTemplate;
-
-    @Autowired
-    JsonWebTokenRepository jsonWebTokenRepository;
 
     @Override
     public void add(String username, String token) {
