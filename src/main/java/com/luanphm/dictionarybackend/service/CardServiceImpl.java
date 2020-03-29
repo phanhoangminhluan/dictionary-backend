@@ -10,6 +10,7 @@ import com.luanphm.dictionarybackend.mapping.CardMapping;
 import com.luanphm.dictionarybackend.mapping.CardSetMapping;
 import com.luanphm.dictionarybackend.repository.card.CardRepository;
 import com.luanphm.dictionarybackend.repository.card_set.CardSetRepository;
+import com.luanphm.dictionarybackend.repository.studiable_card.StudiableCardRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
 import com.luanphm.dictionarybackend.utility.CommonUtilities;
 import org.mapstruct.factory.Mappers;
@@ -31,6 +32,9 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     private CardMapping cardMapping = Mappers.getMapper(CardMapping.class);
 
     private CardSetMapping cardSetMapping = Mappers.getMapper(CardSetMapping.class);
+
+    @Autowired
+    private StudiableCardRepository studiableCardRepository;
 
     @Override
     protected void inject() {
@@ -113,6 +117,7 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
         if (card == null) return null;
 
         try {
+            studiableCardRepository.deleteById_Card_Id(id);
             cardRepository.delete(card);
             return mappingHandler.toDto(card);
         } catch (Exception e) {

@@ -24,5 +24,4 @@ public class SecurityUtils {
     public static final String getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
-
 }

@@ -1,111 +1,41 @@
 DELETE word-detail
 
 PUT word-detail
-{
-   "mappings":{
-      "properties":{
-         "word":{
-            "type":"keyword"
-         },
-      "definition-detail":{
-            "type":"nested",
-            "properties":{
-               "definition":{
-                  "type":"text"
+ {
+    "mappings":{
+       "properties":{
+          "word":{
+             "type":"keyword"
+          },
+       "definition-detail":{
+             "type":"nested",
+             "properties":{
+                "definition":{
+                   "type":"text"
+                },
+                "part-of-speech":{
+                   "type":"keyword"
+                },
+                "synonyms":{
+                   "type":"keyword"
+                },
+                "level":{
+                   "type":"keyword"
+                }
+
+             }
+          },
+           "pronunciation": {
+             "type": "nested",
+             "properties": {
+               "ukPhonetic": {
+                 "type": "keyword"
                },
-               "part-of-speech":{
-                  "type":"keyword"
-               },
-               "synonyms":{
-                  "type":"keyword"
-               },
-               "antonyms":{
-                  "type":"keyword"
-               },
-               "type-of":{
-                  "type":"keyword"
-               },
-               "verb-group":{
-                  "type":"keyword"
-               },
-               "has-types":{
-                  "type":"keyword"
-               },
-               "part-of":{
-                  "type":"keyword"
-               },
-               "has-part":{
-                  "type":"keyword"
-               },
-               "instance-of":{
-                  "type":"keyword"
-               },
-               "has-instances":{
-                  "type":"keyword"
-               },
-               "similar-to":{
-                  "type":"keyword"
-               },
-               "also":{
-                  "type":"keyword"
-               },
-               "entails":{
-                  "type":"keyword"
-               },
-               "member-of":{
-                  "type":"keyword"
-               },
-               "has-members":{
-                  "type":"keyword"
-               },
-               "substance-of":{
-                  "type":"keyword"
-               },
-               "has-substances":{
-                  "type":"keyword"
-               },
-               "in-category":{
-                  "type":"keyword"
-               },
-               "has-categories":{
-                  "type":"keyword"
-               },
-               "usage-of":{
-                  "type":"keyword"
-               },
-               "in-region":{
-                  "type":"keyword"
-               },
-               "region-of":{
-                  "type":"keyword"
-               },
-               "pertains-to":{
-                  "type":"keyword"
+               "usPhonetic": {
+                   "type": "keyword"
                }
-            }
-         },
-      "syllables": {
-        "type": "nested",
-        "properties": {
-          "count": {
-              "type": "integer"
-            },
-            "list": {
-              "type": "text"
-            }
-        }
-      },
-      "pronunciation": {
-        "type": "nested",
-        "properties": {
-          "all": {
-            "type": "keyword"
-          }
-        }
-      },
-      "frequency": {
-        "type": "integer"
-      }
-      }
-   }
-}
+             }
+           }
+       }
+    }
+ }

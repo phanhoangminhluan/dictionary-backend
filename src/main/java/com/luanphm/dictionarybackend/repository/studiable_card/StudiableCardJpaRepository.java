@@ -13,4 +13,6 @@ public interface StudiableCardJpaRepository extends MyJpaRepository<StudiableCar
 
     StudiableCard getById_Card_IdAndId_Card_CardSet_User_Id(String cardId, String userId);
 
+    long deleteById_Card_Id(String cardId);
+
 }
