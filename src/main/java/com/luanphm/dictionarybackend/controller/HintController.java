@@ -45,7 +45,7 @@ public class HintController {
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.WORD_NOT_FOUND, ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("saveAll")
+    @GetMapping("migrate-data-to-elastic")
     public void saveRecomWordToElastic() {
         JSONParser jsonParser = new JSONParser();
         List<Hint> hints = new ArrayList<>();

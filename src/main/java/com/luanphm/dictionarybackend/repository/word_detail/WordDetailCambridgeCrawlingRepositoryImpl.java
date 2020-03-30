@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -22,8 +23,11 @@ public class WordDetailCambridgeCrawlingRepositoryImpl implements WordDetailRepo
     private RapidApiRequestHandler<WordDetail> rapidApiRequestHandler;
     private Navigator navigator;
 
+    @Value("${chrome.driver}")
+    private String driver;
+
     public WordDetailCambridgeCrawlingRepositoryImpl() {
-         navigator = new Navigator("drivers/chromedriver");
+         navigator = new Navigator(driver);
     }
 
 
