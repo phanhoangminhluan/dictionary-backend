@@ -4,16 +4,21 @@ import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardIdDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardLearnDTO;
-import com.luanphm.dictionarybackend.entity.StudiableCard;
-import com.luanphm.dictionarybackend.entity.StudiableCardId;
+import com.luanphm.dictionarybackend.entity.*;
 import com.luanphm.dictionarybackend.mapping.StudiableCardIdMapping;
 import com.luanphm.dictionarybackend.mapping.StudiableCardMapping;
 import com.luanphm.dictionarybackend.repository.card.CardRepository;
+import com.luanphm.dictionarybackend.repository.card_set.CardSetRepository;
+import com.luanphm.dictionarybackend.repository.card_set_session.CardSetSessionRepository;
 import com.luanphm.dictionarybackend.repository.studiable_card.StudiableCardRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
+import org.hibernate.Session;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, StudiableCardId, StudiableCardDTO> implements StudiableCardService {
@@ -23,6 +28,12 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
 
     @Autowired
     private CardRepository cardRepository;
+
+    @Autowired
+    private CardSetRepository cardSetRepository;
+
+    @Autowired
+    private CardSetSessionRepository cardSetSessionRepository;
 
     private StudiableCardIdMapping studiableCardIdMapping = Mappers.getMapper(StudiableCardIdMapping.class);
 
@@ -60,6 +71,30 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
         studiableCard = studiableCardRepository.increaseForgetCount(studiableCard);
 
         return studiableCardMapping.toLearnDto(studiableCard);
+    }
+
+    @Override
+    public boolean addManyStudiableCard(CardSetSession cardSetSession, List<Card> cards) {
+        String username = SecurityUtils.getCurrentUser();
+        if (username == null) return false;
+
+        if (cards == null || cards.size() == 0) return false;
+
+        List<StudiableCard> studiableCards = new ArrayList<>();
+        for (Card card : cards) {
+            StudiableCard studiableCard = StudiableCard.builder()
+                    .id(StudiableCardId
+                            .builder()
+                            .card(card)
+                            .cardSetSession(cardSetSession)
+                            .build()
+                    )
+                    .build();
+            studiableCards.add(studiableCard);
+
+        }
+        boolean isSuccess = studiableCardRepository.addMany(studiableCards);
+        return isSuccess;
     }
 
     private StudiableCard getStudiableCardById(StudiableCardIdDTO studiableCardIdDTO) {

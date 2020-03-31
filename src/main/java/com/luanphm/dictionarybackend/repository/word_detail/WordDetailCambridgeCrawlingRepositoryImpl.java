@@ -13,23 +13,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository(value = "wordDetailCambridgeCrawlingRepository")
 public class WordDetailCambridgeCrawlingRepositoryImpl implements WordDetailRepository {
 
-    @Autowired
-    private RapidApiRequestHandler<WordDetail> rapidApiRequestHandler;
     private Navigator navigator;
 
     @Value("${chrome.driver}")
     private String driver;
 
     public WordDetailCambridgeCrawlingRepositoryImpl() {
-         navigator = new Navigator(driver);
     }
 
+    @PostConstruct
+    public void init() {
+        navigator = new Navigator(driver);
+    }
 
     @Override
     public WordDetail getWord(String word) {

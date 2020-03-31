@@ -6,10 +6,13 @@ import com.luanphm.dictionarybackend.dto.CardInsertManyDTO;
 import com.luanphm.dictionarybackend.dto.CardSetDTO;
 import com.luanphm.dictionarybackend.entity.Card;
 import com.luanphm.dictionarybackend.entity.CardSet;
+import com.luanphm.dictionarybackend.entity.CardSetSession;
+import com.luanphm.dictionarybackend.entity.StudiableCard;
 import com.luanphm.dictionarybackend.mapping.CardMapping;
 import com.luanphm.dictionarybackend.mapping.CardSetMapping;
 import com.luanphm.dictionarybackend.repository.card.CardRepository;
 import com.luanphm.dictionarybackend.repository.card_set.CardSetRepository;
+import com.luanphm.dictionarybackend.repository.card_set_session.CardSetSessionRepository;
 import com.luanphm.dictionarybackend.repository.studiable_card.StudiableCardRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
 import com.luanphm.dictionarybackend.utility.CommonUtilities;
@@ -36,6 +39,12 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     @Autowired
     private StudiableCardRepository studiableCardRepository;
 
+    @Autowired
+    private StudiableCardService studiableCardService;
+
+    @Autowired
+    private CardSetSessionRepository cardSetSessionRepository;
+
     @Override
     protected void inject() {
         this.repository = cardRepository;
@@ -44,7 +53,6 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     }
 
     @Override
-    @Transactional
     public CardSetDTO addMany(CardInsertManyDTO dto) {
 
         String username = SecurityUtils.getCurrentUser();
@@ -54,11 +62,22 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
 
         List<Card> cards = cardMapping.toCardsFromCardInsertDto(dto.getCards());
 
+        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndCardSet_Id(username, cardSet.getId());
+
+
         for (Card card : cards) {
             card.setId(CommonUtilities.generateUniqueId());
             card.setCardSet(cardSet);
             cardSet.getCards().add(card);
         }
+        cardSetRepository.save(cardSet);
+        if (cardSetSession != null) {
+            studiableCardService.addManyStudiableCard(cardSetSession, cards);
+        }
+
+
+
+
         boolean isUpdated = cardSetRepository.update(getSession(), cardSet);
         if (!isUpdated) return null;
 
