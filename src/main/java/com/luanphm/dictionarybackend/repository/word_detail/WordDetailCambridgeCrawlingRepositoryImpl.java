@@ -2,74 +2,33 @@ package com.luanphm.dictionarybackend.repository.word_detail;
 
 import com.luanphm.dictionarybackend.constant.CommonConstants;
 import com.luanphm.dictionarybackend.entity.WordDetail;
-import com.luanphm.dictionarybackend.entity.word_entity.DefinitionDetail;
-import com.luanphm.dictionarybackend.entity.word_entity.Pronunciation;
-import com.luanphm.dictionarybackend.handler.RapidApiRequestHandler;
-import com.luanphm.dictionarybackend.utility.Navigator;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.luanphm.dictionarybackend.utility.CommonUtilities;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository(value = "wordDetailCambridgeCrawlingRepository")
 public class WordDetailCambridgeCrawlingRepositoryImpl implements WordDetailRepository {
 
-    private Navigator navigator;
-
-    @Value("${chrome.driver}")
-    private String driver;
-
-    public WordDetailCambridgeCrawlingRepositoryImpl() {
-    }
-
-    @PostConstruct
-    public void init() {
-        navigator = new Navigator(driver);
-    }
+    @Value("${crawler.url}")
+    private String crawlerUrl;
 
     @Override
-    public WordDetail getWord(String word) {
-
-        WebDriver driver = navigator.getDriver();
-        navigator.navigateTo(CommonConstants.BASE_URL + word);
-
-        if (driver.getCurrentUrl().equals("https://dictionary.cambridge.org/vi/dictionary/english/")) return null;
-
-        String ukPhonetic = navigator.getText(CommonConstants.UK_PHONETIC);
-        String usPhonetic = navigator.getText(CommonConstants.US_PHONETIC);
-
-        List<WebElement> definitionBlocks = driver.findElements(By.cssSelector(CommonConstants.DEFINITION_BLOCKS));
-        List<DefinitionDetail> definitionDetails = new ArrayList<>();
-        for (WebElement definitionBlock : definitionBlocks) {
-
-            String partOfSpeech = navigator.getText(CommonConstants.PART_OF_SPEECH);
-            String level = navigator.getText(CommonConstants.LEVEL, definitionBlock);
-            String definition =  navigator.getText(CommonConstants.DEFINITION, definitionBlock);
-            List<String> examples = navigator.getTexts(CommonConstants.EXAMPLES, definitionBlock);
-            List<String> synonyms = navigator.getAttributes(CommonConstants.SYNONYMS, "title", definitionBlock);
-
-            DefinitionDetail definitionDetail = DefinitionDetail.builder()
-                    .definition(definition)
-                    .partOfSpeech(partOfSpeech)
-                    .level(level)
-                    .synonyms(synonyms)
-                    .examples(examples)
-                    .build();
-
-            definitionDetails.add(definitionDetail);
+    public  WordDetail getWord(String word) {
+        HttpResponse<String> response;
+        try {
+            response = Unirest.get(crawlerUrl + word).asString();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        WordDetail wordDetail = WordDetail.builder()
-                .word(word)
-                .definitionDetails(definitionDetails)
-                .pronunciation(Pronunciation.builder().usPhonetic(usPhonetic).ukPhonetic(ukPhonetic).build())
-                .build();
+        WordDetail wordDetail = (WordDetail) CommonUtilities.parseJsonToObject(response.getBody(), WordDetail.class);
+        if (wordDetail == null) return null;
+        wordDetail.setId(word);
         return wordDetail;
     }
 

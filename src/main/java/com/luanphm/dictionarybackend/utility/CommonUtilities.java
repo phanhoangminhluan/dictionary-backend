@@ -1,6 +1,15 @@
 package com.luanphm.dictionarybackend.utility;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.luanphm.dictionarybackend.constant.CommonConstants;
+import com.luanphm.dictionarybackend.entity.WordDetail;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,6 +26,21 @@ public class CommonUtilities {
     public static String getCurrentDateTimeForRedis() {
         String dateTime = getCurrentDateTime();
         return dateTime.replace("/", "").replace(":", "").replace(" ", "");
+    }
+
+
+    public static Object parseJsonToObject(String json, Class clazz) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object obj = null;
+        try {
+            obj = objectMapper.readValue(json, clazz);
+        } catch (UnrecognizedPropertyException e) {
+            e.printStackTrace();
+            return null;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 
     public static String generateUniqueId() {

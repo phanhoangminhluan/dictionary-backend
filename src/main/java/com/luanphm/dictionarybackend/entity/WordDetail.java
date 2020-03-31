@@ -22,7 +22,6 @@ import java.util.List;
 @Builder
 public class WordDetail extends BaseEntity<String> {
     private String word;
-    @JsonAlias("results")
     @Field(ElasticFields.DEFINITION_DETAIL)
     private List<DefinitionDetail> definitionDetails = new ArrayList<>();
 

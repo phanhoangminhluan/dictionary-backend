@@ -12,6 +12,5 @@ import java.util.List;
 @Builder
 public class Syllables {
     private int count;
-    @JsonAlias("list")
     private List<String> syllableList;
 }

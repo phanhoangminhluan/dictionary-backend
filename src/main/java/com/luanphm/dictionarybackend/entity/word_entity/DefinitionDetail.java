@@ -26,7 +26,6 @@ public class DefinitionDetail {
     private List<String> examples;
 
     @Field(ElasticFields.DERIVATIONS)
-    @JsonAlias("derivation")
     private List<String> derivations;
 
     @Field(ElasticFields.SYNONYMS)
