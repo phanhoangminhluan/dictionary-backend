@@ -74,13 +74,13 @@ public class UserServiceImpl extends MyAbstractSession implements UserService {
     }
 
     @Override
-    public UserInfoDTO getUser(String username) {
+    public UserInfoDTO getUser() {
         String currentUser = SecurityUtils.getCurrentUser();
         if (currentUser == null) return null;
         User user = userRepository.getById(currentUser);
 
         return UserInfoDTO.builder()
-                .username(username)
+                .username(currentUser)
                 .email(user.getEmail())
                 .build();
     }

@@ -36,9 +36,9 @@ public class UserController {
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
-    @GetMapping("{username}")
-    public ResponseEntity getUserInfor(@PathVariable String username) {
-        UserInfoDTO dto = userService.getUser(username);
+    @GetMapping()
+    public ResponseEntity getUserInfor() {
+        UserInfoDTO dto = userService.getUser();
         return dto != null
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, dto, HttpStatus.ACCEPTED)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);

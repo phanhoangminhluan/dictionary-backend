@@ -16,6 +16,6 @@ public interface UserService {
 
     boolean changeEmail(UserChangeEmailDTO dto);
 
-    UserInfoDTO getUser(String username);
+    UserInfoDTO getUser();
 
 }
