@@ -1,17 +1,18 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.configuration.security.UserWithRoleDTO;
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.UserChangeEmailDTO;
 import com.luanphm.dictionarybackend.dto.UserChangePasswordDTO;
+import com.luanphm.dictionarybackend.dto.UserInfoDTO;
 import com.luanphm.dictionarybackend.dto.UserRegisterDTO;
-import com.luanphm.dictionarybackend.configuration.security.UserWithRoleDTO;
 import com.luanphm.dictionarybackend.entity.Role;
 import com.luanphm.dictionarybackend.entity.User;
 import com.luanphm.dictionarybackend.repository.user.UserRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractSession;
+import com.luanphm.dictionarybackend.utility.CommonUtilities;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -35,18 +36,29 @@ public class UserServiceImpl extends MyAbstractSession implements UserService {
     @Override
     public boolean addUser(UserRegisterDTO dto) {
         Session session = getSession();
-        dto.setPassword(BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt(12)));
+        dto.setPassword(CommonUtilities.hashPassword(dto.getPassword()));
         return userRepository.add(session, new User(dto.getUsername(), dto.getEmail(), dto.getPassword(), new Role(2)));
     }
 
     @Override
     public boolean changePassword(UserChangePasswordDTO dto) {
-        if (dto == null || dto.getPassword() == null || dto.getPassword().isEmpty()) return false;
+        if (dto == null
+                || dto.getNewPassword() == null
+                || dto.getNewPassword().isEmpty()
+                || dto.getOldPassword() == null
+                || dto.getOldPassword().isEmpty()
+        ) return false;
 
         User user = userRepository.getById(SecurityUtils.getCurrentUser());
-        dto.setPassword(BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt(12)));
-        if (user == null || user.getPassword().equals(dto.getPassword())) return false;
-        user.setPassword(dto.getPassword());
+        if (user == null) return false;
+
+        String oldHashedPassword = CommonUtilities.hashPassword(dto.getOldPassword());
+        String newHashedPassword = CommonUtilities.hashPassword(dto.getNewPassword());
+
+        if (    !user.getPassword().equals(oldHashedPassword) ||
+                !user.getPassword().equals(newHashedPassword)) return false;
+
+        user.setPassword(newHashedPassword);
         return userRepository.update(getSession(), user);
 
     }
@@ -61,5 +73,13 @@ public class UserServiceImpl extends MyAbstractSession implements UserService {
         return userRepository.update(getSession(), user);
     }
 
+    @Override
+    public UserInfoDTO getUser(String username) {
+        User user = userRepository.getById(SecurityUtils.getCurrentUser());
 
+        return UserInfoDTO.builder()
+                .username(username)
+                .email(user.getEmail())
+                .build();
+    }
 }

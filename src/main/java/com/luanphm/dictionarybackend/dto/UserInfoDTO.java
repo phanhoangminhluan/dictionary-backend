@@ -4,10 +4,12 @@ import lombok.*;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserChangePasswordDTO {
-    private String oldPassword;
-    private String newPassword;
+@Builder
+public class UserInfoDTO {
+
+    private String username;
+    private String email;
+
 }

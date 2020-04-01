@@ -20,4 +20,6 @@ public interface UserJpaRepository extends MyJpaRepository<User, String> {
             "WHERE e.id = :username")
     User getUserWithRole(@Param("username") String username);
 
+
+
 }

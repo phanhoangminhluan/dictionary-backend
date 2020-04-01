@@ -4,16 +4,14 @@ package com.luanphm.dictionarybackend.utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import com.luanphm.dictionarybackend.constant.CommonConstants;
-import com.luanphm.dictionarybackend.entity.WordDetail;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+
+import static org.springframework.security.crypto.bcrypt.BCrypt.hashpw;
 
 public class CommonUtilities {
 
@@ -41,6 +39,10 @@ public class CommonUtilities {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    public static String hashPassword(String password) {
+        return hashpw(password, BCrypt.gensalt(12));
     }
 
     public static String generateUniqueId() {
