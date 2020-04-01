@@ -1,9 +1,6 @@
 package com.luanphm.dictionarybackend.controller;
 
-import com.luanphm.dictionarybackend.dto.ResponseDTO;
-import com.luanphm.dictionarybackend.dto.UserChangeEmailDTO;
-import com.luanphm.dictionarybackend.dto.UserChangePasswordDTO;
-import com.luanphm.dictionarybackend.dto.UserRegisterDTO;
+import com.luanphm.dictionarybackend.dto.*;
 import com.luanphm.dictionarybackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +33,14 @@ public class UserController {
         boolean isChanged = userService.changeEmail(dto);
         return isChanged
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED)
+                : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
+    }
+
+    @GetMapping("{username}")
+    public ResponseEntity getUserInfor(@PathVariable String username) {
+        UserInfoDTO dto = userService.getUser(username);
+        return dto != null
+                ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, dto, HttpStatus.ACCEPTED)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
