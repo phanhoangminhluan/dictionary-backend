@@ -16,43 +16,35 @@ public abstract class MyAbstractService<E, ID extends Serializable, D> extends M
     @PostConstruct
     protected abstract void inject();
 
-    public List<D> getAll() {
+    public List<D> getAll() throws Exception {
 
         List<E> entites = repository.getAll();
 
         return  mappingHandler.toDtos(entites);
 }
 
-    public D getById(ID id) {
+    public D getById(ID id) throws Exception {
         E entity = repository.getById(id);
         return mappingHandler.toDto(entity);
     }
 
-    public boolean add(D dto) {
+    public boolean add(D dto) throws Exception {
         boolean isSuccess = false;
         E entity = mappingHandler.toEntity(dto);
-        try {
-            isSuccess = repository.add(getSession(), entity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return isSuccess;
+        repository.add(getSession(), entity);
+        return true;
     }
 
-    public boolean update(D dto) {
+    public boolean update(D dto) throws Exception {
         E entity = mappingHandler.toEntity(dto);
-        try {
-            return repository.update(getSession(), entity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        repository.update(getSession(), entity);
+        return true;
     }
 
-    public D deleteById(ID id) {
+    public D deleteById(ID id) throws Exception {
         try {
             E entity = repository.getById(id);
-            if (entity == null) return null;
+
             repository.deleteById(id);
             return mappingHandler.toDto(entity);
         } catch (Exception e) {

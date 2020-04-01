@@ -4,14 +4,14 @@ import java.util.List;
 
 public interface MyInterfaceService<ID, D> {
 
-    List<D> getAll();
+    List<D> getAll() throws Exception;
 
-    D getById(ID id);
+    D getById(ID id) throws Exception;
 
-    boolean add(D dto);
+    boolean add(D dto) throws Exception;
 
-    boolean update(D dto);
+    boolean update(D dto) throws Exception;
 
-    D deleteById(ID id);
+    D deleteById(ID id) throws Exception;
 
 }

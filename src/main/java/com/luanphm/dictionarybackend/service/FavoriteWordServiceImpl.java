@@ -1,5 +1,6 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.constant.ExceptionConstants;
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.FavoriteWordDTO;
 import com.luanphm.dictionarybackend.dto.WordDetailDTO;
@@ -25,19 +26,25 @@ public class FavoriteWordServiceImpl implements FavoriteWordService{
     private FavoriteWordMapping favoriteWordMapping = Mappers.getMapper(FavoriteWordMapping.class);
 
     @Override
-    public List<FavoriteWordDTO> getWords() {
+    public List<FavoriteWordDTO> getWords() throws Exception {
         List<FavoriteWord> favoriteWords = favoriteWordRepository.getWords();
-        if (favoriteWords.size() == 0 || favoriteWords == null) return null;
+        if (favoriteWords == null || favoriteWords.size() == 0) {
+            throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        }
         return favoriteWordMapping.toDtos(favoriteWords);
     }
 
     @Override
-    public boolean addWord(String word) {
-        if (word == null) return false;
+    public boolean addWord(String word) throws Exception {
+        if (word == null) {
+            throw new Exception(ExceptionConstants.INPUT_ERROR);
+        }
 
         WordDetailDTO wordDetail = wordDetailService.getWord(word);
 
-        if (wordDetail == null) return false;
+        if (wordDetail == null) {
+            throw new Exception(ExceptionConstants.NO_OBJECT_FOUND);
+        }
 
         String username = SecurityUtils.getCurrentUser();
         FavoriteWord favoriteWord = FavoriteWord.builder()
@@ -46,12 +53,15 @@ public class FavoriteWordServiceImpl implements FavoriteWordService{
                 .userId(username)
                 .createdDate(CommonUtilities.getCurrentDateTime())
                 .build();
+
         return favoriteWordRepository.addWord(favoriteWord);
     }
 
     @Override
-    public boolean deleteWord(String word) {
-        if (word == null || word.isEmpty()) return false;
+    public boolean deleteWord(String word) throws Exception {
+        if (word == null || word.isEmpty()) {
+            throw new Exception(ExceptionConstants.INPUT_ERROR);
+        }
 
         return favoriteWordRepository.deleteWord(word);
     }

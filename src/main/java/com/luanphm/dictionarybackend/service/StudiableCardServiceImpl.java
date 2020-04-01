@@ -1,23 +1,20 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.constant.ExceptionConstants;
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardIdDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardLearnDTO;
-import com.luanphm.dictionarybackend.entity.*;
+import com.luanphm.dictionarybackend.entity.StudiableCard;
+import com.luanphm.dictionarybackend.entity.StudiableCardId;
 import com.luanphm.dictionarybackend.mapping.StudiableCardIdMapping;
 import com.luanphm.dictionarybackend.mapping.StudiableCardMapping;
-import com.luanphm.dictionarybackend.repository.card.CardRepository;
-import com.luanphm.dictionarybackend.repository.card_set.CardSetRepository;
-import com.luanphm.dictionarybackend.repository.card_set_session.CardSetSessionRepository;
 import com.luanphm.dictionarybackend.repository.studiable_card.StudiableCardRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
-import org.hibernate.Session;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,15 +22,6 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
 
     @Autowired
     private StudiableCardRepository studiableCardRepository;
-
-    @Autowired
-    private CardRepository cardRepository;
-
-    @Autowired
-    private CardSetRepository cardSetRepository;
-
-    @Autowired
-    private CardSetSessionRepository cardSetSessionRepository;
 
     private StudiableCardIdMapping studiableCardIdMapping = Mappers.getMapper(StudiableCardIdMapping.class);
 
@@ -45,16 +33,18 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
         this.mappingHandler = Mappers.getMapper(StudiableCardMapping.class);
     }
 
-    public void deleteById(StudiableCardIdDTO studiableCardIdDTO) {
+    public void deleteById(StudiableCardIdDTO studiableCardIdDTO) throws Exception {
         StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
         super.deleteById(studiableCardId);
     }
 
     @Override
-    public StudiableCardLearnDTO increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO) {
+    public StudiableCardLearnDTO increaseRememberCount(StudiableCardIdDTO studiableCardIdDTO) throws Exception {
         StudiableCard studiableCard = getStudiableCardById(studiableCardIdDTO);
 
-        if (studiableCard == null) return null;
+        if (studiableCard == null) {
+            throw new Exception(ExceptionConstants.NO_OBJECT_FOUND);
+        }
 
         studiableCard = studiableCardRepository.increaseRememberCount(studiableCard);
 
@@ -62,7 +52,7 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
     }
 
     @Override
-    public StudiableCardLearnDTO increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO) {
+    public StudiableCardLearnDTO increaseForgetCount(StudiableCardIdDTO studiableCardIdDTO) throws Exception {
 
         StudiableCard studiableCard = getStudiableCardById(studiableCardIdDTO);
 
@@ -74,30 +64,43 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
     }
 
     @Override
-    public boolean addManyStudiableCard(CardSetSession cardSetSession, List<Card> cards) {
-        String username = SecurityUtils.getCurrentUser();
-        if (username == null) return false;
-
-        if (cards == null || cards.size() == 0) return false;
-
-        List<StudiableCard> studiableCards = new ArrayList<>();
-        for (Card card : cards) {
-            StudiableCard studiableCard = StudiableCard.builder()
-                    .id(StudiableCardId
-                            .builder()
-                            .card(card)
-                            .cardSetSession(cardSetSession)
-                            .build()
-                    )
-                    .build();
-            studiableCards.add(studiableCard);
-
+    public void deleteByCardSetSessionId(String cardSetSessionId) throws Exception {
+        try {
+            studiableCardRepository.deleteById_CardSetSession_Id(cardSetSessionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(ExceptionConstants.ERROR_WHEN_DELETE);
         }
-        boolean isSuccess = studiableCardRepository.addMany(studiableCards);
-        return isSuccess;
     }
 
-    private StudiableCard getStudiableCardById(StudiableCardIdDTO studiableCardIdDTO) {
+    @Override
+    public void deleteByCardSetIdAndUserName(String cardSetId) throws Exception {
+        String username = SecurityUtils.getCurrentUser();
+        try {
+            studiableCardRepository.deleteById_Card_CardSet_IdAndId_Card_CardSet_User_Id(cardSetId, username);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(ExceptionConstants.ERROR_WHEN_DELETE);
+        }
+    }
+
+    @Override
+    public void addMany(List<StudiableCard> studiableCards) throws Exception {
+        studiableCardRepository.addMany(studiableCards);
+    }
+
+    @Override
+    public void deleteByCardId(String cardId) throws Exception {
+
+        try {
+            studiableCardRepository.deleteById_Card_Id(cardId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(ExceptionConstants.ERROR_WHEN_DELETE);
+        }
+    }
+
+    private StudiableCard getStudiableCardById(StudiableCardIdDTO studiableCardIdDTO) throws Exception {
         StudiableCardId studiableCardId = studiableCardIdMapping.toEntity(studiableCardIdDTO);
 
         String username = SecurityUtils.getCurrentUser();
@@ -106,6 +109,7 @@ public class StudiableCardServiceImpl extends MyAbstractService<StudiableCard, S
                         studiableCardId.getCard().getId(),
                         username
                 );
+        if (studiableCard == null) throw new Exception(ExceptionConstants.NO_OBJECT_FOUND);
         return studiableCard;
     }
 

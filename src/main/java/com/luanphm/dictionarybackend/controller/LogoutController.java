@@ -16,7 +16,7 @@ public class LogoutController {
     private JsonWebTokenService jsonWebTokenService;
 
     @GetMapping("logout-handler")
-    public ResponseEntity logoutHandler(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity logoutHandler(@RequestHeader("Authorization") String authorization) throws Exception {
         jsonWebTokenService.deleteById(authorization);
         return ResponseDTO.generateResponseObject(true, ResponseDTO.RUN_SUCCESSFULLY, null, HttpStatus.OK);
     }

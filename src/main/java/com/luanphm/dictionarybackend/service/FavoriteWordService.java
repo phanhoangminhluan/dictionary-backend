@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface FavoriteWordService {
 
-    List<FavoriteWordDTO> getWords();
+    List<FavoriteWordDTO> getWords() throws Exception;
 
-    boolean addWord(String word);
+    boolean addWord(String word) throws Exception;
 
-    boolean deleteWord(String word);
+    boolean deleteWord(String word) throws Exception;
 
 
 

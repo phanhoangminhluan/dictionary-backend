@@ -1,5 +1,6 @@
 package com.luanphm.dictionarybackend.handler;
 
+import com.luanphm.dictionarybackend.constant.ExceptionConstants;
 import org.hibernate.Session;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -14,52 +15,49 @@ import java.util.stream.StreamSupport;
 @NoRepositoryBean
 public interface MyJpaRepository<E, ID extends Serializable> extends CrudRepository<E, ID> {
 
-    default List<E> getSpecificFieldsAll() {
-       return null;
-   }
-
-    default E getSpecificFieldsById(ID id) {
-       return null;
-    }
-
     @Override
     Iterable<E> findAll();
 
     @Override
     Optional<E> findById(ID id);
 
-    default E getById(ID id) {
-        Optional<E> entity = findById(id);
-        return entity.orElse(null);
+    default E getById(ID id) throws Exception {
+        Optional<E> entityOptional = findById(id);
+        E  entity = entityOptional.orElse(null);
+
+        if (entity == null) throw new Exception(ExceptionConstants.NO_OBJECT_FOUND);
+
+        return entity;
     }
 
-    default List<E> getAll() {
+    default List<E> getAll() throws Exception {
 
-        return StreamSupport
+        List list =  StreamSupport
                 .stream(findAll().spliterator(), false)
                 .collect(Collectors.toList());
-
+        if (list == null || list.size() == 0) {
+            throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        }
+        return list;
     }
 
     @Transactional
-    default boolean add(Session session, E entity){
+    default void add(Session session, E entity) throws Exception {
         try {
             session.save(entity);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw new Exception(ExceptionConstants.ERROR_WHEN_ADDED);
         }
-        return true;
     }
 
     @Transactional
-    default boolean update(Session session, E entity) {
+    default void update(Session session, E entity) throws Exception {
         try {
             session.update(entity);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw new Exception(ExceptionConstants.ERROR_WHEN_UPDATE);
         }
-        return true;
     }
 }

@@ -1,26 +1,21 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.constant.ExceptionConstants;
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.CardDTO;
 import com.luanphm.dictionarybackend.dto.CardInsertManyDTO;
 import com.luanphm.dictionarybackend.dto.CardSetDTO;
 import com.luanphm.dictionarybackend.entity.Card;
 import com.luanphm.dictionarybackend.entity.CardSet;
-import com.luanphm.dictionarybackend.entity.CardSetSession;
-import com.luanphm.dictionarybackend.entity.StudiableCard;
 import com.luanphm.dictionarybackend.mapping.CardMapping;
 import com.luanphm.dictionarybackend.mapping.CardSetMapping;
 import com.luanphm.dictionarybackend.repository.card.CardRepository;
-import com.luanphm.dictionarybackend.repository.card_set.CardSetRepository;
-import com.luanphm.dictionarybackend.repository.card_set_session.CardSetSessionRepository;
 import com.luanphm.dictionarybackend.repository.studiable_card.StudiableCardRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
-import com.luanphm.dictionarybackend.utility.CommonUtilities;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -30,7 +25,7 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     private CardRepository cardRepository;
 
     @Autowired
-    private CardSetRepository cardSetRepository;
+    private CardSetService cardSetService;
 
     private CardMapping cardMapping = Mappers.getMapper(CardMapping.class);
 
@@ -43,7 +38,7 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     private StudiableCardService studiableCardService;
 
     @Autowired
-    private CardSetSessionRepository cardSetSessionRepository;
+    private CardSetSessionService cardSetSessionService;
 
     @Override
     protected void inject() {
@@ -53,96 +48,75 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     }
 
     @Override
-    public CardSetDTO addMany(CardInsertManyDTO dto) {
+    public CardSetDTO addMany(CardInsertManyDTO dto) throws Exception {
 
         String username = SecurityUtils.getCurrentUser();
 
-        CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, dto.getCardSetId());
-        if (cardSet == null) return null;
+        CardSet cardSet = cardSetService.getByUsername(dto.getCardSetId());
 
         List<Card> cards = cardMapping.toCardsFromCardInsertDto(dto.getCards());
 
-        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndCardSet_Id(username, cardSet.getId());
+        cardSetService.addManyCards(cardSet, cards);
 
-
-        for (Card card : cards) {
-            card.setId(CommonUtilities.generateUniqueId());
-            card.setCardSet(cardSet);
-            cardSet.getCards().add(card);
-        }
-        cardSetRepository.save(cardSet);
-        if (cardSetSession != null) {
-            studiableCardService.addManyStudiableCard(cardSetSession, cards);
-        }
-
-
-
-
-        boolean isUpdated = cardSetRepository.update(getSession(), cardSet);
-        if (!isUpdated) return null;
+        cardSetSessionService.addManyStudiableCards(cardSet.getId(), cards);
 
         return cardSetMapping.toDto(cardSet);
     }
 
-    private Card getCardById(String id) {
-        Card card = repository.getById(id);
-        if (card == null) return null;
-
+    private Card getCardById(String id) throws Exception {
         String username = SecurityUtils.getCurrentUser();
-        String usernameOfCard = card.getCardSet().getUser().getId();
-        if (!username.equals(usernameOfCard)) return null;
 
+        Card card = cardRepository.getByCardSet_User_IdAndId(username, id);
+        if (card == null) throw new Exception(ExceptionConstants.NO_OBJECT_FOUND);
         return card;
     }
 
     @Override
-    public CardDTO getById(String id) {
+    public CardDTO getById(String id) throws Exception {
 
-        String username = SecurityUtils.getCurrentUser();
+        Card card = getCardById(id);
 
-        Card card = cardRepository.getByCardSet_User_IdAndId(username, id);
-        if (card == null) return null;
         return cardMapping.toDto(card);
     }
 
     @Override
-    public boolean update(CardDTO dto) {
-        String username = SecurityUtils.getCurrentUser();
-        Card card = cardRepository.getByCardSet_User_IdAndId(username, dto.getId());
+    public boolean update(CardDTO dto) throws Exception {
 
-        if (card == null);
-
+        Card card = getCardById(dto.getId());
         card.setTerm(dto.getTerm());
         card.setDefinition(dto.getDefinition());
 
-        boolean isUpdated = repository.update(getSession(), card);
-        return isUpdated;
+        cardRepository.update(getSession(), card);
+
+        return true;
+    }
+
+
+    private List<Card> getAllByUsername() throws Exception {
+        String username = SecurityUtils.getCurrentUser();
+        List<Card> cards = cardRepository.getByCardSet_User_Id(username);
+        if (cards == null || cards.size() == 0) throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        return cards;
     }
 
     @Override
-    public List<CardDTO> getAll() {
-        String username = SecurityUtils.getCurrentUser();
-        List<Card> cards = cardRepository.getByCardSet_User_Id(username);
-
-        if (cards == null || cards.size() == 0) return null;
-
+    public List<CardDTO> getAll() throws Exception {
+        List<Card> cards = getAllByUsername();
         return cardMapping.toDtos(cards);
     }
 
     @Override
-    public CardDTO deleteById(String id) {
+    public CardDTO deleteById(String id) throws Exception {
 
         Card card = getCardById(id);
-        if (card == null) return null;
-
+        studiableCardService.deleteByCardId(id);
         try {
-            studiableCardRepository.deleteById_Card_Id(id);
             cardRepository.delete(card);
-            return mappingHandler.toDto(card);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new Exception(ExceptionConstants.ERROR_WHEN_DELETE);
         }
+        return mappingHandler.toDto(card);
     }
 
 

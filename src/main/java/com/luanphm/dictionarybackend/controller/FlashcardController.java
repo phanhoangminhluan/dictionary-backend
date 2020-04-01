@@ -19,7 +19,7 @@ public class FlashcardController {
     private StudiableCardService studiableCardService;
 
     @PostMapping("learn/{cardSetId}")
-    public ResponseEntity learn (@PathVariable String cardSetId) {
+    public ResponseEntity learn (@PathVariable String cardSetId) throws Exception {
 
         CardSetSessionLearningDTO cardSetSession = cardSetSessionService.generateLearnSession(cardSetId);
         return cardSetSession != null
@@ -27,8 +27,8 @@ public class FlashcardController {
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
-    @PutMapping("remember/{cardSetSessionId}/{cardId}")
-    public ResponseEntity remember(@PathVariable String cardSetSessionId, @PathVariable String cardId) {
+    @PutMapping("remember/{cardId}")
+    public ResponseEntity remember(@PathVariable String cardSetSessionId, @PathVariable String cardId) throws Exception {
         StudiableCardIdDTO studiableCardIdDTO = new StudiableCardIdDTO(cardId, cardSetSessionId);
         StudiableCardLearnDTO studiableCardDTO = studiableCardService.increaseRememberCount(studiableCardIdDTO);
         return studiableCardDTO != null
@@ -37,7 +37,7 @@ public class FlashcardController {
     }
 
     @PutMapping("forget/{cardSetSessionId}/{cardId}")
-    public ResponseEntity forget(@PathVariable String cardSetSessionId, @PathVariable String cardId) {
+    public ResponseEntity forget(@PathVariable String cardSetSessionId, @PathVariable String cardId) throws Exception {
         StudiableCardIdDTO studiableCardIdDTO = new StudiableCardIdDTO(cardId, cardSetSessionId);
         StudiableCardLearnDTO studiableCardDTO = studiableCardService.increaseForgetCount(studiableCardIdDTO);
         return studiableCardDTO != null
@@ -46,7 +46,7 @@ public class FlashcardController {
     }
 
     @GetMapping("reset-progress/{cardSetId}")
-    public ResponseEntity resetProgress(@PathVariable String cardSetId) {
+    public ResponseEntity resetProgress(@PathVariable String cardSetId) throws Exception {
 
         CardSetSessionLearningDTO cardSetSession = cardSetSessionService.reset(cardSetId);
         return cardSetSession != null
@@ -55,7 +55,7 @@ public class FlashcardController {
     }
 
     @GetMapping("count/{cardSetId}")
-    public ResponseEntity countRememberAndForget(@PathVariable String cardSetId) {
+    public ResponseEntity countRememberAndForget(@PathVariable String cardSetId) throws Exception {
         StudiableCardCountDTO studiableCardCountDTO = cardSetSessionService.countRememberAndForget(cardSetId);
         return studiableCardCountDTO != null
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, studiableCardCountDTO, HttpStatus.OK)

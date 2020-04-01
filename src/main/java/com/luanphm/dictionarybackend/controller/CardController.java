@@ -9,10 +9,7 @@ import com.luanphm.dictionarybackend.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "card")
@@ -26,8 +23,32 @@ public class CardController extends MyAbstractController<String, CardDTO> {
         this.service = cardService;
     }
 
+    @Override
+    @GetMapping
+    public ResponseEntity<CardDTO> getAll() throws Exception {
+        return super.getAll();
+    }
+
+    @Override
+    @GetMapping("{id}")
+    public ResponseEntity getById(@PathVariable String id) throws Exception {
+        return super.getById(id);
+    }
+
+    @Override
+    @PutMapping
+    public ResponseEntity update(@RequestBody CardDTO dto) throws Exception {
+        return super.update(dto);
+    }
+
+    @Override
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteById(@PathVariable String id) throws Exception {
+        return super.deleteById(id);
+    }
+
     @PostMapping("cards")
-    public ResponseEntity addMannyCards(@RequestBody CardInsertManyDTO cards) {
+    public ResponseEntity addMannyCards(@RequestBody CardInsertManyDTO cards) throws Exception {
         CardSetDTO cardSetDTO = cardService.addMany(cards);
         return cardSetDTO != null
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, cardSetDTO, HttpStatus.CREATED)

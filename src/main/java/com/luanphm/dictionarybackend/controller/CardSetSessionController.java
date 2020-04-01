@@ -2,14 +2,13 @@ package com.luanphm.dictionarybackend.controller;
 
 import com.luanphm.dictionarybackend.controller.SharedController.MyAbstractController;
 import com.luanphm.dictionarybackend.dto.CardSetSessionDTO;
-import com.luanphm.dictionarybackend.dto.ResponseDTO;
 import com.luanphm.dictionarybackend.service.CardSetSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "card-set-session")
@@ -23,12 +22,14 @@ public class CardSetSessionController extends MyAbstractController<String, CardS
     }
 
     @Override
-    public ResponseEntity add(@Valid CardSetSessionDTO dto) {
-        return ResponseDTO.serviceUnavailable("Please use POST flashcard/learn/{cardSetId} to create card set session");
+    @GetMapping
+    public ResponseEntity<CardSetSessionDTO> getAll() throws Exception {
+        return super.getAll();
     }
 
     @Override
-    public ResponseEntity update(CardSetSessionDTO dto) {
-        return ResponseDTO.serviceUnavailable("Can not update a card set session");
+    @GetMapping("{id}")
+    public ResponseEntity getById(@PathVariable String id) throws Exception {
+        return super.getById(id);
     }
 }

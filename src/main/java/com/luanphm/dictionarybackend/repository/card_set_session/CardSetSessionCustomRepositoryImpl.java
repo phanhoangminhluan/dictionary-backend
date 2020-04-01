@@ -1,5 +1,6 @@
 package com.luanphm.dictionarybackend.repository.card_set_session;
 
+import com.luanphm.dictionarybackend.constant.ExceptionConstants;
 import com.luanphm.dictionarybackend.entity.*;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractSession;
 import com.luanphm.dictionarybackend.utility.CommonUtilities;
@@ -14,7 +15,7 @@ import java.util.List;
 public class CardSetSessionCustomRepositoryImpl extends MyAbstractSession implements CardSetSessionCustomRepository {
     @Override
     @Transactional
-    public CardSetSession generateCardSetSession(CardSet cardSet) {
+    public CardSetSession generateCardSetSession(CardSet cardSet) throws Exception {
 
         Session session = getSession();
 
@@ -31,7 +32,7 @@ public class CardSetSessionCustomRepositoryImpl extends MyAbstractSession implem
             cardSetSession.setStudiableCards(studiableCards);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new Exception(ExceptionConstants.ERROR_WHEN_UPDATE);
         }
         return cardSetSession;
     }

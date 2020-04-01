@@ -14,14 +14,16 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+
     @PostMapping("register")
-    public ResponseDTO register(@RequestBody UserRegisterDTO dto) {
+    public ResponseDTO register(@RequestBody UserRegisterDTO dto) throws Exception {
         userService.addUser(dto);
         return ResponseDTO.builder().isSuccess(true).body(dto).build();
     }
 
     @PutMapping("password")
-    public ResponseEntity changePassword(@RequestBody UserChangePasswordDTO dto) {
+    public ResponseEntity changePassword(@RequestBody UserChangePasswordDTO dto) throws Exception {
         boolean isChanged = userService.changePassword(dto);
         return isChanged
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED)
@@ -29,7 +31,7 @@ public class UserController {
     }
 
     @PutMapping("email")
-    public ResponseEntity changeEmail(@RequestBody UserChangeEmailDTO dto) {
+    public ResponseEntity changeEmail(@RequestBody UserChangeEmailDTO dto) throws Exception {
         boolean isChanged = userService.changeEmail(dto);
         return isChanged
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED)
@@ -37,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity getUserInfor() {
+    public ResponseEntity getUserInfor() throws Exception {
         UserInfoDTO dto = userService.getUser();
         return dto != null
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, dto, HttpStatus.ACCEPTED)

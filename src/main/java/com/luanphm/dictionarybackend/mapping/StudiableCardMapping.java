@@ -59,7 +59,7 @@ public abstract class StudiableCardMapping extends MappingHelper implements Base
     })
     public abstract StudiableCardId toEntity(StudiableCardIdDTO dto);
 
-    public StudiableCardLearnDTO toLearnDto(StudiableCard entity) {
+    public StudiableCardLearnDTO toLearnDto(StudiableCard entity) throws Exception {
         if (entity == null) return null;
         StudiableCardLearnDTO studiableCardDTO = StudiableCardLearnDTO
                 .builder()

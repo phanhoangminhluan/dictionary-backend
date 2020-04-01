@@ -38,6 +38,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String header = request.getHeader(HEADER_STRING);
         if (header == null || !header.startsWith(TOKEN_PREFIX)) {
             chain.doFilter(request, response);
+//            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/token-required");
+//            requestDispatcher.forward(request, response);
             return;
         }
         UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(request);
@@ -61,6 +63,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     .getBody()
                     .getSubject();
         } catch (ExpiredJwtException e) {
+            return null;
+        } catch (Exception e) {
             return null;
         }
 

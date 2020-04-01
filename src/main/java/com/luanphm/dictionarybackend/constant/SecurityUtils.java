@@ -16,12 +16,17 @@ public class SecurityUtils {
             "/",
             "/csrf",
             "/word/*",
-            "/hint/*"
+            "/hint/*",
+            "/authorize-fail"
     };
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String ROLE_USER = "USER";
 
-    public static final String getCurrentUser() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    public static final String getCurrentUser() throws Exception {
+        String currentUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (currentUserName == null) {
+            throw new Exception("Username is not found");
+        }
+        return currentUserName;
     }
 }

@@ -8,7 +8,6 @@ import com.luanphm.dictionarybackend.service.SharedService.MyInterfaceService;
 public interface CardService extends MyInterfaceService<String, CardDTO> {
 
 
-    CardSetDTO addMany(CardInsertManyDTO dto);
-
+    CardSetDTO addMany(CardInsertManyDTO dto) throws Exception;
 
 }

@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface FavoriteWordRepository {
 
-    List<FavoriteWord> getWords();
-    boolean addWord(FavoriteWord favoriteWord);
-    boolean deleteWord(String word);
+    List<FavoriteWord> getWords() throws Exception;
+    boolean addWord(FavoriteWord favoriteWord) throws Exception;
+    boolean deleteWord(String word) throws Exception;
 
 }

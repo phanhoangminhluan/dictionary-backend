@@ -4,10 +4,8 @@ import com.luanphm.dictionarybackend.dto.ResponseDTO;
 import com.luanphm.dictionarybackend.service.SharedService.MyInterfaceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import javax.validation.Valid;
 import java.util.List;
 
 public abstract class MyAbstractController<ID, D> {
@@ -17,8 +15,7 @@ public abstract class MyAbstractController<ID, D> {
     @PostConstruct
     protected abstract void inject();
 
-    @GetMapping
-    public ResponseEntity<D> getAll() {
+    public ResponseEntity<D> getAll() throws Exception {
         List<D> dtos = service.getAll();
         if (dtos == null || dtos.size() == 0) {
             return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.NOT_FOUND, ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
@@ -28,8 +25,7 @@ public abstract class MyAbstractController<ID, D> {
         }
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity getById(@PathVariable("id") ID id) {
+    public ResponseEntity getById(ID id) throws Exception {
         D dto = service.getById(id);
         if (dto == null) {
             return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.NOT_FOUND, ResponseDTO.EMPTY_BODY, HttpStatus.NOT_FOUND);
@@ -38,8 +34,7 @@ public abstract class MyAbstractController<ID, D> {
         }
     }
 
-    @PostMapping("")
-    public ResponseEntity add(@Valid @RequestBody D dto) {
+    public ResponseEntity add(D dto) throws Exception {
         boolean isAdded = service.add(dto);
         if (!isAdded) {
             return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
@@ -48,8 +43,7 @@ public abstract class MyAbstractController<ID, D> {
         }
     }
 
-    @PutMapping("")
-    public ResponseEntity update(@RequestBody D dto) {
+    public ResponseEntity update(D dto) throws Exception {
         boolean isUpdated = service.update(dto);
 
         if (!isUpdated) {
@@ -59,8 +53,7 @@ public abstract class MyAbstractController<ID, D> {
         }
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity deleteById(@PathVariable("id") ID id) {
+    public ResponseEntity deleteById(ID id) throws Exception {
         D dto = service.deleteById(id);
         if (dto == null) {
             return ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);

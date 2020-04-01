@@ -1,5 +1,6 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.constant.ExceptionConstants;
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.CardSetDTO;
 import com.luanphm.dictionarybackend.dto.CardSetInsertDTO;
@@ -24,6 +25,12 @@ public class CardSetServiceImpl extends MyAbstractService<CardSet, String, CardS
     @Autowired
     private CardSetRepository cardSetRepository;
 
+    @Autowired
+    private CardSetSessionService cardSetSessionService;
+
+    @Autowired
+    private StudiableCardService studiableCardService;
+
     private CardSetMapping cardSetMapping = Mappers.getMapper(CardSetMapping.class);
 
 
@@ -33,32 +40,43 @@ public class CardSetServiceImpl extends MyAbstractService<CardSet, String, CardS
         this.mappingHandler = Mappers.getMapper(CardSetMapping.class);
     }
 
+    public CardSet getByUsername(String cardSetId) throws Exception {
+        String username = SecurityUtils.getCurrentUser();
+        CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, cardSetId);
+        if (cardSet == null) {
+            throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        }
+        return cardSet;
+    }
+
     @Override
-    public List<CardSetDTO> getAll() {
+    public List<CardSetDTO> getAll() throws Exception {
+
         String username = SecurityUtils.getCurrentUser();
         List<CardSet> cardSets = cardSetRepository.getByUser_Id(username);
-        if (cardSets == null || cardSets.size() == 0) return null;
+        if (cardSets == null || cardSets.size() == 0) {
+            throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        }
         return cardSetMapping.toDtos(cardSets);
     }
 
     @Override
-    public CardSetDTO getById(String id) {
-        String username = SecurityUtils.getCurrentUser();
-        CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, id);
-        if (cardSet == null) return null;
+    public CardSetDTO getById(String id) throws Exception {
+        CardSet cardSet = getByUsername(id);
         return cardSetMapping.toDto(cardSet);
     }
 
     @Override
-    public boolean add(CardSetDTO cardSetDto) {
+    public boolean add(CardSetDTO cardSetDto) throws Exception {
         CardSet cardSet = mappingHandler.toEntity(cardSetDto);
         cardSet.setCreatedDate(CommonUtilities.getCurrentDateTime());
 
-        return cardSetRepository.add(getSession(), cardSet);
+        cardSetRepository.add(getSession(), cardSet);
+        return true;
     }
 
     @Override
-    public CardSetDTO add(CardSetInsertDTO cardSetInsertDto) {
+    public CardSetDTO add(CardSetInsertDTO cardSetInsertDto) throws Exception {
         String username = SecurityUtils.getCurrentUser();
 
         CardSet cardSet = cardSetMapping.toCardSet(cardSetInsertDto);
@@ -72,19 +90,13 @@ public class CardSetServiceImpl extends MyAbstractService<CardSet, String, CardS
         }
         Session session = getSession();
 
-        boolean isSuccess = cardSetRepository.add(session, cardSet);
-
-        if (isSuccess) {
-            return cardSetMapping.toDto(cardSet);
-        }
-        return null;
+        cardSetRepository.add(session, cardSet);
+        return cardSetMapping.toDto(cardSet);
     }
 
     @Override
-    public CardSetDTO updateName(CardSetUpdateNameDTO cardSetUpdateNameDTO) {
-        String username = SecurityUtils.getCurrentUser();
-        CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, cardSetUpdateNameDTO.getId());
-        if (cardSet == null) return null;
+    public CardSetDTO updateName(CardSetUpdateNameDTO cardSetUpdateNameDTO) throws Exception {
+        CardSet cardSet = getByUsername(cardSetUpdateNameDTO.getId());
 
         cardSet.setName(cardSetUpdateNameDTO.getName());
         cardSetRepository.update(getSession(), cardSet);
@@ -93,16 +105,32 @@ public class CardSetServiceImpl extends MyAbstractService<CardSet, String, CardS
     }
 
     @Override
-    public CardSetDTO deleteById(String id) {
-        String username = SecurityUtils.getCurrentUser();
-        CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, id);
-        if (cardSet == null) return null;
+    public void addManyCards(CardSet cardSet, List<Card> cards) {
+        for (Card card : cards) {
+            card.setId(CommonUtilities.generateUniqueId());
+            card.setCardSet(cardSet);
+            cardSet.getCards().add(card);
+        }
+        cardSetRepository.save(cardSet);
+    }
+
+    @Override
+    public CardSetDTO deleteById(String cardSetId) throws Exception {
+        CardSet cardSet = getByUsername(cardSetId);
+
         try {
-            repository.delete(cardSet);
+            studiableCardService.deleteByCardSetIdAndUserName(cardSetId);
+            cardSetSessionService.deleteByCardSetId(cardSetId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            cardSetRepository.delete(cardSet);
             return mappingHandler.toDto(cardSet);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new Exception(ExceptionConstants.ERROR_WHEN_DELETE);
         }
     }
 }

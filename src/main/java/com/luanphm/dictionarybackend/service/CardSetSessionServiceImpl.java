@@ -1,23 +1,21 @@
 package com.luanphm.dictionarybackend.service;
 
+import com.luanphm.dictionarybackend.constant.ExceptionConstants;
 import com.luanphm.dictionarybackend.constant.SecurityUtils;
 import com.luanphm.dictionarybackend.dto.CardSetSessionDTO;
 import com.luanphm.dictionarybackend.dto.CardSetSessionLearningDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardCountDTO;
 import com.luanphm.dictionarybackend.dto.StudiableCardDTO;
-import com.luanphm.dictionarybackend.entity.CardSet;
-import com.luanphm.dictionarybackend.entity.CardSetSession;
-import com.luanphm.dictionarybackend.entity.StudiableCard;
+import com.luanphm.dictionarybackend.entity.*;
 import com.luanphm.dictionarybackend.mapping.CardSetSessionMapping;
 import com.luanphm.dictionarybackend.mapping.StudiableCardMapping;
-import com.luanphm.dictionarybackend.repository.card_set.CardSetRepository;
 import com.luanphm.dictionarybackend.repository.card_set_session.CardSetSessionRepository;
-import com.luanphm.dictionarybackend.repository.studiable_card.StudiableCardRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,10 +25,10 @@ public class CardSetSessionServiceImpl extends MyAbstractService<CardSetSession,
     private CardSetSessionRepository cardSetSessionRepository;
 
     @Autowired
-    private CardSetRepository cardSetRepository;
+    private CardSetService cardSetService;
 
     @Autowired
-    private StudiableCardRepository studiableCardRepository;
+    private StudiableCardService studiableCardService;
 
 
     private StudiableCardMapping studiableCardMapping = Mappers.getMapper(StudiableCardMapping.class);
@@ -40,55 +38,62 @@ public class CardSetSessionServiceImpl extends MyAbstractService<CardSetSession,
         this.mappingHandler = Mappers.getMapper(CardSetSessionMapping.class);
     }
 
-    @Override
-    public CardSetSessionDTO getById(String id) {
+    private CardSetSession  getByUsername(String cardSetSessionId) throws Exception {
         String username = SecurityUtils.getCurrentUser();
-        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndId(username, id);
-        if (cardSetSession == null) return null;
+        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndId(username, cardSetSessionId);
+        if (cardSetSession == null) {
+            throw new Exception(ExceptionConstants.NO_OBJECT_FOUND);
+        }
+        return cardSetSession;
+    }
+
+    @Override
+    public CardSetSessionDTO getById(String id) throws Exception {
+        CardSetSession cardSetSession = getByUsername(id);
         return mappingHandler.toDto(cardSetSession);
     }
 
     @Override
-    public List<CardSetSessionDTO> getAll() {
+    public List<CardSetSessionDTO> getAll() throws Exception {
         String username = SecurityUtils.getCurrentUser();
         List<CardSetSession> cardSetSessions = cardSetSessionRepository.getByCardSet_User_Id(username);
-        if (cardSetSessions == null || cardSetSessions.size() == 0) return null;
+        if (cardSetSessions == null || cardSetSessions.size() == 0)  {
+            throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        }
         return mappingHandler.toDtos(cardSetSessions);
     }
 
 
     @Override
-    public CardSetSessionDTO deleteById(String id) {
-        String username = SecurityUtils.getCurrentUser();
-        CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndId(username, id);
-
-        if (cardSetSession == null) return null;
+    public CardSetSessionDTO deleteById(String id) throws Exception {
+        CardSetSession cardSetSession = getByUsername(id);
         try {
             cardSetSessionRepository.delete(cardSetSession);
             return mappingHandler.toDto(cardSetSession);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new Exception(ExceptionConstants.ERROR_WHEN_DELETE);
         }
     }
 
     @Override
-    public CardSetSessionLearningDTO generateLearnSession(String cardSetId) {
+    public CardSetSessionLearningDTO generateLearnSession(String cardSetId) throws Exception {
         String username = SecurityUtils.getCurrentUser();
         CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndCardSet_Id(username, cardSetId);
 
         if (cardSetSession == null) {
-            CardSet cardSet = cardSetRepository.getByUser_IdAndId(username, cardSetId);
-            if (cardSet == null) return null;
-
+            CardSet cardSet = cardSetService.getByUsername(cardSetId);
             cardSetSession = cardSetSessionRepository.generateCardSetSession(cardSet);
-            if (cardSetSession == null) return null;
         }
         List<StudiableCard> studiableCards = cardSetSession.getStudiableCards();
-        if (studiableCards == null) return null;
+        if (studiableCards == null) {
+            throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        }
 
-        List<StudiableCardDTO> studiableCardDtos =  studiableCardMapping.toDtos(studiableCards);
-        if (studiableCardDtos == null) return null;
+        List<StudiableCardDTO> studiableCardDtos = studiableCardMapping.toDtos(studiableCards);
+        if (studiableCardDtos == null) {
+            throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        }
 
         return CardSetSessionLearningDTO
                 .builder()
@@ -99,41 +104,78 @@ public class CardSetSessionServiceImpl extends MyAbstractService<CardSetSession,
     }
 
     @Override
-    public CardSetSessionLearningDTO reset(String cardSetId) {
+    public CardSetSessionLearningDTO reset(String cardSetId) throws Exception {
 
-        CardSetSession cardSetSession = deleteByCardSetId(cardSetId);
-        if(cardSetSession == null) return null;
+        getByCardSetIdAndUsername(cardSetId);
 
-        CardSetSessionLearningDTO cardSetSessionLearningDTO = generateLearnSession(cardSetId);
+        try {
 
-        return cardSetSessionLearningDTO;
+            deleteByCardSetId(cardSetId);
+
+        } catch (Exception e) {
+
+        }
+
+        return generateLearnSession(cardSetId);
     }
 
-    public CardSetSession deleteByCardSetId(String cardSetId) {
+    public CardSetSession deleteByCardSetId(String cardSetId) throws Exception {
+        CardSetSession cardSetSession = null;
         try {
-            String username = SecurityUtils.getCurrentUser();
-            CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndCardSet_Id(username, cardSetId);
-            if (cardSetSession == null) return null;
+            cardSetSession = getByCardSetIdAndUsername(cardSetId);
 
-            studiableCardRepository.deleteById_CardSetSession_Id(cardSetSession.getId());
-            cardSetSessionRepository.deleteByCardSet_Id(cardSetId);
-
-            return cardSetSession;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
+        try {
+
+            studiableCardService.deleteByCardSetSessionId(cardSetSession.getId());
+            cardSetSessionRepository.deleteByCardSet_Id(cardSetId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(ExceptionConstants.ERROR_WHEN_DELETE);
+        }
+        return cardSetSession;
     }
 
-    public StudiableCardCountDTO countRememberAndForget(String cardSetId) {
+    @Override
+    public CardSetSession getByCardSetIdAndUsername(String cardSetId) throws Exception {
         String username = SecurityUtils.getCurrentUser();
         CardSetSession cardSetSession = cardSetSessionRepository.getByCardSet_User_IdAndCardSet_Id(username, cardSetId);
-        if (cardSetSession == null) return null;
+        if (cardSetSession == null) throw new Exception(ExceptionConstants.NO_OBJECT_FOUND);
+        return cardSetSession;
+    }
+
+    @Override
+    public void addManyStudiableCards(String cardSetId, List<Card> cards) throws Exception {
+        CardSetSession cardSetSession = getByCardSetIdAndUsername(cardSetId);
+
+        List<StudiableCard> studiableCards = new ArrayList<>();
+        for (Card card : cards) {
+            StudiableCard studiableCard = StudiableCard.builder()
+                    .id(StudiableCardId
+                            .builder()
+                            .card(card)
+                            .cardSetSession(cardSetSession)
+                            .build()
+                    )
+                    .build();
+            studiableCards.add(studiableCard);
+
+        }
+        studiableCardService.addMany(studiableCards);
+    }
+
+    public StudiableCardCountDTO countRememberAndForget(String cardSetId) throws Exception {
+        CardSetSession cardSetSession = getByCardSetIdAndUsername(cardSetId);
+
         int numberOfRememberWord = 0;
         int numberOfForgetWord = 0;
         List<StudiableCard> studiableCards = cardSetSession.getStudiableCards();
 
-        if (studiableCards == null || studiableCards.size() == 0) return null;
+        if (studiableCards == null || studiableCards.size() == 0) {
+            throw new Exception(ExceptionConstants.NO_OBJECTS_FOUND);
+        }
 
         for (StudiableCard studiableCard : cardSetSession.getStudiableCards()) {
             if (studiableCard.isRemember()) {

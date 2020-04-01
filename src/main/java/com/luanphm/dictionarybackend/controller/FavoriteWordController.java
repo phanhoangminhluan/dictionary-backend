@@ -18,7 +18,7 @@ public class FavoriteWordController {
     private FavoriteWordService favoriteWordService;
 
     @GetMapping
-    public ResponseEntity getWords() {
+    public ResponseEntity getWords() throws Exception {
         List<FavoriteWordDTO> words = favoriteWordService.getWords();
         return words != null
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, words, HttpStatus.OK)
@@ -26,7 +26,7 @@ public class FavoriteWordController {
     }
 
     @PostMapping("{word}")
-    public ResponseEntity addWord(@PathVariable String word) {
+    public ResponseEntity addWord(@PathVariable String word) throws Exception {
         boolean isAdded = favoriteWordService.addWord(word);
         return isAdded
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CREATED)
@@ -34,11 +34,12 @@ public class FavoriteWordController {
     }
 
     @DeleteMapping("{word}")
-    public ResponseEntity deleteWord(@PathVariable String word) {
+    public ResponseEntity deleteWord(@PathVariable String word) throws Exception {
         boolean isDeleted = favoriteWordService.deleteWord(word);
         return isDeleted
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.ACCEPTED)
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
+
 
 }

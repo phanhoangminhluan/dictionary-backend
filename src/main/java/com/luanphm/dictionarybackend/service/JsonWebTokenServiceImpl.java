@@ -30,7 +30,7 @@ public class JsonWebTokenServiceImpl implements JsonWebTokenService {
     }
 
     @Override
-    public boolean deleteById(String token) {
+    public boolean deleteById(String token) throws Exception {
         if (token == null || token.isEmpty()) return false;
         String username = SecurityUtils.getCurrentUser();
         String key = findById(username, token);

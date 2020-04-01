@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping(value = "card-set")
 public class CardSetController extends MyAbstractController<String, CardSetDTO> {
@@ -25,19 +23,26 @@ public class CardSetController extends MyAbstractController<String, CardSetDTO> 
         this.service = cardSetService;
 
     }
-
     @Override
-    public ResponseEntity add(@Valid CardSetDTO dto) {
-        return ResponseDTO.serviceUnavailable("Please use POST card-set/custom to create card set");
+    @GetMapping
+    public ResponseEntity<CardSetDTO> getAll() throws Exception {
+        return super.getAll();
     }
 
     @Override
-    public ResponseEntity update(CardSetDTO dto) {
-        return ResponseDTO.serviceUnavailable("Please use PUT card-set/custom to update card set");
+    @GetMapping("{id}")
+    public ResponseEntity getById(@PathVariable String id) throws Exception {
+        return super.getById(id);
     }
 
-    @PostMapping("custom")
-    public ResponseEntity createCardSet(@RequestBody CardSetInsertDTO cardSetInsertDto) {
+    @Override
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteById(@PathVariable String id) throws Exception {
+        return super.deleteById(id);
+    }
+
+    @PostMapping
+    public ResponseEntity createCardSet(@RequestBody CardSetInsertDTO cardSetInsertDto) throws Exception {
 
         CardSetDTO cardSetDTO = cardSetService.add(cardSetInsertDto);
 
@@ -46,8 +51,8 @@ public class CardSetController extends MyAbstractController<String, CardSetDTO> 
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
-    @PutMapping("custom")
-    public ResponseEntity updateName(@RequestBody CardSetUpdateNameDTO cardSetUpdateNameDTO) {
+    @PutMapping
+    public ResponseEntity updateName(@RequestBody CardSetUpdateNameDTO cardSetUpdateNameDTO) throws Exception {
         CardSetDTO cardSetDTO = cardSetService.updateName(cardSetUpdateNameDTO);
         return cardSetDTO != null
                 ? ResponseDTO.generateResponseObject(ResponseDTO.SUCCESS, ResponseDTO.RUN_SUCCESSFULLY, cardSetDTO, HttpStatus.ACCEPTED)

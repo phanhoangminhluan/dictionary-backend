@@ -5,5 +5,5 @@ import com.luanphm.dictionarybackend.entity.CardSetSession;
 
 public interface CardSetSessionCustomRepository {
 
-    CardSetSession generateCardSetSession(CardSet cardSet);
+    CardSetSession generateCardSetSession(CardSet cardSet) throws Exception;
 }

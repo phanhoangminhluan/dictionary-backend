@@ -6,6 +6,6 @@ public interface JsonWebTokenService {
 
     boolean isExisted(String key, String token);
 
-    boolean deleteById(String key);
+    boolean deleteById(String key) throws Exception;
 
 }

@@ -10,12 +10,12 @@ public interface UserService {
 
     UserWithRoleDTO getUserWithRole(String username);
 
-    boolean addUser(UserRegisterDTO user);
+    boolean addUser(UserRegisterDTO user) throws Exception;
 
-    boolean changePassword(UserChangePasswordDTO dto);
+    boolean changePassword(UserChangePasswordDTO dto) throws Exception;
 
-    boolean changeEmail(UserChangeEmailDTO dto);
+    boolean changeEmail(UserChangeEmailDTO dto) throws Exception;
 
-    UserInfoDTO getUser();
+    UserInfoDTO getUser() throws Exception;
 
 }
