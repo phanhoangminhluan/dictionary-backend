@@ -10,7 +10,6 @@ import com.luanphm.dictionarybackend.entity.CardSet;
 import com.luanphm.dictionarybackend.mapping.CardMapping;
 import com.luanphm.dictionarybackend.mapping.CardSetMapping;
 import com.luanphm.dictionarybackend.repository.card.CardRepository;
-import com.luanphm.dictionarybackend.repository.studiable_card.StudiableCardRepository;
 import com.luanphm.dictionarybackend.service.SharedService.MyAbstractService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,6 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     private CardSetMapping cardSetMapping = Mappers.getMapper(CardSetMapping.class);
 
     @Autowired
-    private StudiableCardRepository studiableCardRepository;
-
-    @Autowired
     private StudiableCardService studiableCardService;
 
     @Autowired
@@ -50,15 +46,17 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     @Override
     public CardSetDTO addMany(CardInsertManyDTO dto) throws Exception {
 
-        String username = SecurityUtils.getCurrentUser();
-
         CardSet cardSet = cardSetService.getByUsername(dto.getCardSetId());
 
         List<Card> cards = cardMapping.toCardsFromCardInsertDto(dto.getCards());
 
         cardSetService.addManyCards(cardSet, cards);
 
-        cardSetSessionService.addManyStudiableCards(cardSet.getId(), cards);
+        try {
+            cardSetSessionService.addManyStudiableCards(cardSet.getId(), cards);
+        } catch (Exception e) {
+
+        }
 
         return cardSetMapping.toDto(cardSet);
     }
@@ -109,7 +107,11 @@ public class CardServiceImpl extends MyAbstractService<Card, String, CardDTO> im
     public CardDTO deleteById(String id) throws Exception {
 
         Card card = getCardById(id);
-        studiableCardService.deleteByCardId(id);
+        try {
+            studiableCardService.deleteByCardId(id);
+        } catch (Exception e) {
+
+        }
         try {
             cardRepository.delete(card);
         } catch (Exception e) {
