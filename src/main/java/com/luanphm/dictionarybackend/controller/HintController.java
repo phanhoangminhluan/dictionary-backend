@@ -109,26 +109,6 @@ public class HintController {
      *         </dependency>
      */
 
-//    @GetMapping("filter-data-asc")
-//    public void selectDataAsc() {
-//        loopOverHint(2);
-//    }
-//
-//    @GetMapping("filter-data-desc")
-//    public void selectDataDesc() {
-//        loopOverHint(1);
-//    }
-//
-//    @GetMapping("filter-data-normal")
-//    public void selectDataNormal() {
-//        loopOverHint(3);
-//    }
-//
-//    @GetMapping("filter-data-reverse")
-//    public void selectDataReverse() {
-//        loopOverHint(4);
-//    }
-
     @GetMapping("run-crawler")
     public void runCrawler() {
         CrawlerConnector crawlInDesc = new CrawlerConnector(1, wordDetailService, hintRepository);
@@ -141,64 +121,6 @@ public class HintController {
         crawlerStraight.start();
         crawlerReverse.start();
     }
-//
-//    public void loopOverHint(int type) {
-//        try {
-//            System.out.println("START ------------------------------------------: " + CommonUtilities.getCurrentDateTime());
-//            for (int i = 1; i <= 30; i++) {
-//                List<Hint> hints = null;
-//                if (type == 1) {
-//                    hints = hintRepository.getDesc(i);
-//                } else if (type == 2) {
-//                    hints = hintRepository.getAsc(i);
-//                } else if (type == 3){
-//                    hints = hintRepository.getAll(i, null);
-//                } else if (type == 4) {
-//                    hints = hintRepository.getAll(20 - i, null);
-//                }
-//
-//                if (hints == null || hints.size() == 0) break;
-//                process(hints, type);
-//            }
-//            System.out.println("END  ------------------------------------------: " + CommonUtilities.getCurrentDateTime());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    public void process(List<Hint> hints, int type) {
-//        int i = 0;
-//        int added = 0;
-//        String typeStr = "";
-//        switch (type) {
-//            case 1: typeStr = "DESCENDING";
-//                break;
-//            case 2: typeStr = "ASCENDING";
-//                break;
-//            case 3: typeStr = "STRAIGHT";
-//                break;
-//            case 4: typeStr = "REVERSE";
-//                break;
-//        }
-//        for (Hint hint : hints) {
-//            i++;
-//            String wordstr = hint.getWord();
-//            System.out.print(CommonUtilities.getCurrentDateTime() + " - " + typeStr + " - " + i + " - " + wordstr);
-//            WordDetail wordDetail = wordDetailService.getWordNormal(wordstr, type);
-//            if (wordDetail != null) {
-//                if (wordDetail.getWord().equals("please stop now")) {
-//                    System.out.println("[[[[[ - " + wordstr + " - " + added + " - ]]]]]");
-//                    return;
-//                }
-//                added++;
-//                System.out.print( " - " + wordDetail.getPronunciation().getUkPhonetic() + " - " + added + " - ADDED");
-//            } else {
-//                System.out.println( " - DELETED");
-//
-//                hintRepository.deleteByTerm(wordstr);
-//            }
-//            System.out.println();
-//        }
-//    }
 }
 class CrawlerConnector implements Runnable {
 
@@ -231,9 +153,8 @@ class CrawlerConnector implements Runnable {
                 } else if (type == 3){
                     hints = hintRepository.getAll(i, null);
                 } else if (type == 4) {
-                    hints = hintRepository.getAll(20 - i, null);
+                    hints = hintRepository.getAll(30 - i, null);
                 }
-
                 if (hints == null || hints.size() == 0) break;
                 process(hints, type);
             }
