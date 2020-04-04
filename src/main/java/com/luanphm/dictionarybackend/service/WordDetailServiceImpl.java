@@ -26,9 +26,9 @@ public class WordDetailServiceImpl implements WordDetailService {
     @Override
     public WordDetailDTO getWord(String word) {
         boolean isSuccess = false;
-        WordDetail wordDetail = wordDetailElasticRepository.getWord(word);
+        WordDetail wordDetail = wordDetailElasticRepository.getWord(word, 1);
         if (wordDetail == null) {
-            wordDetail = wordDetailCambridgeCrawlingRepository.getWord(word);
+            wordDetail = wordDetailCambridgeCrawlingRepository.getWord(word, 1);
             if (wordDetail != null) {
                 wordDetailElasticRepository.saveWord(wordDetail);
                 isSuccess = true;
@@ -39,6 +39,18 @@ public class WordDetailServiceImpl implements WordDetailService {
         return isSuccess
                 ? wordDetailMapping.toDto(wordDetail)
                 : null;
+    }
+
+    @Override
+    public WordDetail getWordNormal(String word, int type) {
+        WordDetail wordDetail = wordDetailElasticRepository.getWord(word, type);
+        if (wordDetail == null) {
+            wordDetail = wordDetailCambridgeCrawlingRepository.getWord(word, type);
+            if (wordDetail != null) {
+                wordDetailElasticRepository.saveWord(wordDetail);
+            }
+        }
+        return wordDetail;
     }
 
     @Override

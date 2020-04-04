@@ -18,10 +18,12 @@ public class WordDetailCambridgeCrawlingRepositoryImpl implements WordDetailRepo
     private String crawlerUrl;
 
     @Override
-    public  WordDetail getWord(String word) {
+    public  WordDetail getWord(String word, int type) {
         HttpResponse<String> response;
         try {
-            response = Unirest.get(crawlerUrl + word).asString();
+            Unirest.setTimeouts(1000000000, 1000000000);
+            response = Unirest
+                    .get(crawlerUrl + "type-" + type + "/" + word).asString();
         } catch (UnirestException e) {
             e.printStackTrace();
             return null;

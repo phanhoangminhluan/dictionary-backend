@@ -29,12 +29,19 @@ public abstract class WordDetailMapping extends MappingHelper implements BaseMap
     @Override
     public  WordDetailDTO toDto(WordDetail entity) {
         DefinitionDetailMapping definitionDetailMapping = Mappers.getMapper(DefinitionDetailMapping.class);
-        WordDetailDTO wordDetailDTO = WordDetailDTO.builder()
-                .definitionDetails(definitionDetailMapping.entitiesToDto(entity.getDefinitionDetails()))
-                .word(entity.getWord())
-                .ukPhonetic(entity.getPronunciation().getUkPhonetic())
-                .usPhonetic(entity.getPronunciation().getUsPhonetic())
-                .build();
+        WordDetailDTO wordDetailDTO = null;
+        try {
+            wordDetailDTO = WordDetailDTO.builder()
+                    .definitionDetails(definitionDetailMapping.entitiesToDto(entity.getDefinitionDetails()))
+                    .word(entity.getWord())
+                    .ukPhonetic(entity.getPronunciation().getUkPhonetic())
+                    .usPhonetic(entity.getPronunciation().getUsPhonetic())
+                    .build();
+
+        } catch (Exception ex) {
+            System.out.println(entity.getWord());
+            System.out.println("===========NULL===========");
+        }
         return wordDetailDTO;
     }
 

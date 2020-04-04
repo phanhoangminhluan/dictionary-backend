@@ -20,7 +20,7 @@ public class WordDetailElasticRepositoryImpl extends ElasticSearchHandler<WordDe
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public WordDetail getWord(String word) {
+    public WordDetail getWord(String word, int type) {
        return getById(word);
     }
 

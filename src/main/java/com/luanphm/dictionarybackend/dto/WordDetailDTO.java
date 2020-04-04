@@ -15,6 +15,11 @@ public class WordDetailDTO {
     private List<DefinitionDetailDTO> definitionDetails;
     private String ukPhonetic;
     private String usPhonetic;
+
+    @Override
+    public String toString() {
+        return "[" + word + " - " + ukPhonetic + "]";
+    }
 }
 
 

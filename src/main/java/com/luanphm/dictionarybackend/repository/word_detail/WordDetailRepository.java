@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface WordDetailRepository {
 
-    WordDetail getWord(String word);
+    WordDetail getWord(String word, int type);
 
     List<WordDetail> getByTerm(String term, String value);
 

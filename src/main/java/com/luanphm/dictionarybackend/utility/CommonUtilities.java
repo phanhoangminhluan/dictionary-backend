@@ -33,10 +33,11 @@ public class CommonUtilities {
         try {
             obj = objectMapper.readValue(json, clazz);
         } catch (UnrecognizedPropertyException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return null;
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            return null;
         }
         return obj;
     }
