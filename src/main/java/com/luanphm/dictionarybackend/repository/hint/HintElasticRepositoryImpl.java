@@ -82,7 +82,7 @@ public class HintElasticRepositoryImpl extends ElasticSearchHandler<Hint> implem
         SearchHits searchHits = searchResponse.getHits();
         List<Hint> hints = new ArrayList<>();
         for (int i = 0; i < 9500; i++) {
-            if (i % 2 == 0) {
+            if (i % 2 != 0) {
                 SearchHit searchHit = searchHits.getAt(i);
                 String sourceAsString  = searchHit.getSourceAsString();
                 if (sourceAsString != null) {

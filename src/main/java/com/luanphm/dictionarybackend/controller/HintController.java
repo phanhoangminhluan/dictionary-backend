@@ -153,7 +153,7 @@ class CrawlerConnector implements Runnable {
                 } else if (type == 3){
                     hints = hintRepository.getAll(i, null);
                 } else if (type == 4) {
-                    hints = hintRepository.getAll(30 - i, null);
+                    hints = hintRepository.getAll(i + 15, null);
                 }
                 if (hints == null || hints.size() == 0) break;
                 process(hints, type);
