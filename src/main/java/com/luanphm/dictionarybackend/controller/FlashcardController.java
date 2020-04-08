@@ -28,7 +28,8 @@ public class FlashcardController {
     }
 
     @PutMapping("remember/{cardId}")
-    public ResponseEntity remember(@PathVariable String cardSetSessionId, @PathVariable String cardId) throws Exception {
+    public ResponseEntity remember(@PathVariable String cardId) throws Exception {
+        String cardSetSessionId = "";
         StudiableCardIdDTO studiableCardIdDTO = new StudiableCardIdDTO(cardId, cardSetSessionId);
         StudiableCardLearnDTO studiableCardDTO = studiableCardService.increaseRememberCount(studiableCardIdDTO);
         return studiableCardDTO != null
@@ -36,8 +37,9 @@ public class FlashcardController {
                 : ResponseDTO.generateResponseObject(ResponseDTO.FAIL, ResponseDTO.RUN_UNSUCCESSFULLY, ResponseDTO.EMPTY_BODY, HttpStatus.CONFLICT);
     }
 
-    @PutMapping("forget/{cardSetSessionId}/{cardId}")
-    public ResponseEntity forget(@PathVariable String cardSetSessionId, @PathVariable String cardId) throws Exception {
+    @PutMapping("forget/{cardId}")
+    public ResponseEntity forget( @PathVariable String cardId) throws Exception {
+        String cardSetSessionId = "";
         StudiableCardIdDTO studiableCardIdDTO = new StudiableCardIdDTO(cardId, cardSetSessionId);
         StudiableCardLearnDTO studiableCardDTO = studiableCardService.increaseForgetCount(studiableCardIdDTO);
         return studiableCardDTO != null
