@@ -24,6 +24,6 @@ I have built a dictionary application that its data is crawling (by using **Sele
   - ProjectLombok: https://projectlombok.org/
   - MapStruct: https://mapstruct.org/
   - Selenium: https://www.selenium.dev/
-    - For data crawling from a website (specifically, dictionary.cambridge.org)
+    - For crawling data from a website (specifically, dictionary.cambridge.org)
   - JSON Web Token: https://www.jsonwebtoken.io/
   
