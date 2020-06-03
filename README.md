@@ -1,7 +1,7 @@
 # Dictionary Backend
 ### 1. Introduction
 - This project is for learning purpose.
-I have built a dictionary application that its data is crawling (by using **Selenium**) from website about dictionary of Cambridge. 
+I have built a dictionary application that its data is crawling (by using **Selenium**) from dictionary's website. 
 - Moreover, I also learnt about **Redis** that is applied for login, logout feature. A black list in Redis that storing JSON web token which have not expired. 
 - Then, **Elasticsearch** is for showing hint instantly when user types on search bar. 
 ### 2. Tools that we use for this project
