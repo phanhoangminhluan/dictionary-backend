@@ -17,7 +17,9 @@ public class SecurityUtils {
             "/csrf",
             "/word/*",
             "/hint/*",
-            "/authorize-fail"
+            "/authorize-fail",
+            "/home",
+            "/home/**"
     };
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String ROLE_USER = "USER";
